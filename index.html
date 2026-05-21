@@ -263,6 +263,37 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   font-family: var(--mono);
 }
 
+.sidebar-backup {
+  padding: 10px 12px;
+  flex-shrink: 0;
+}
+.sidebar-backup-btn {
+  width: 100%;
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 12px;
+  background: rgba(245,200,0,.07);
+  border: 1px solid rgba(245,200,0,.14);
+  border-radius: var(--r-sm);
+  color: rgba(240,222,106,.7);
+  font-size: 12.5px; font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  letter-spacing: .1px;
+}
+.sidebar-backup-btn svg {
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.sidebar-backup-btn:hover {
+  background: rgba(245,200,0,.15);
+  border-color: rgba(245,200,0,.3);
+  color: var(--accent);
+}
+.sidebar-backup-btn:active { transform: scale(.98); }
+
 .sidebar-user {
   padding: 12px 14px;
   border-top: 1px solid rgba(245,200,0,.12);
@@ -1120,6 +1151,13 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
     </div>
   </nav>
 
+  <div class="sidebar-backup">
+    <button onclick="exportarJSON()" class="sidebar-backup-btn" title="Descargar copia de seguridad JSON">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Copia de seguridad
+    </button>
+  </div>
+
   <div class="sidebar-user">
     <div class="avatar">RF</div>
     <div style="flex:1;min-width:0">
@@ -1352,22 +1390,23 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
         <div class="card" style="margin-bottom:20px">
           <div class="card-header"><div class="card-title">Backup y datos</div></div>
           <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
-            <button class="btn btn-danger" style="margin-bottom:4px" onclick="resetearDatos()">
-              <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-              Borrar todos los datos (reiniciar)
-            </button>
-            <button class="btn btn-secondary" onclick="exportarJSON()">
+            <div id="backup-stats" style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center"></div>
+            <button class="btn btn-primary" onclick="exportarJSON()">
               <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Descargar backup JSON
+              Descargar copia de seguridad (JSON)
             </button>
             <button class="btn btn-secondary" onclick="exportarExcel()">
               <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7l10 10M17 7L7 17"/></svg>
-              Exportar a Excel (CSV)
+              Exportar guardias a Excel (CSV)
             </button>
             <div style="border-top:1px solid var(--border);padding-top:12px">
-              <label style="display:block;margin-bottom:8px">Restaurar desde JSON</label>
+              <label style="display:block;margin-bottom:8px;font-size:12px;color:var(--text2)">Restaurar desde archivo JSON</label>
               <input type="file" accept=".json" onchange="restaurarJSON(this)" style="font-size:12px">
             </div>
+            <button class="btn btn-danger" style="margin-top:4px" onclick="resetearDatos()">
+              <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+              Borrar todos los datos (reiniciar)
+            </button>
           </div>
         </div>
         <div class="card" style="margin-bottom:20px">
@@ -2853,6 +2892,14 @@ function renderReportes(tab){
 function renderConfiguracion(){
   const list=document.getElementById('dias-descanso-list');
   list.innerHTML=DB.diasDescanso.map(d=>`<span class="badge badge-gray" style="gap:6px;padding:5px 10px;font-size:12px">${d} <span onclick="quitarDiaDescanso('${d}')" style="cursor:pointer;font-size:14px;line-height:1;margin-left:2px;opacity:.6">×</span></span>`).join('');
+  // Estadísticas del backup
+  const stats=document.getElementById('backup-stats');
+  if(stats){
+    const tamano=new Blob([localStorage.getItem('tricimoto_db')||'']).size;
+    const kb=(tamano/1024).toFixed(1);
+    const stat=(label,val)=>`<div><div style="font-size:20px;font-weight:800;font-family:var(--mono);color:var(--accent)">${val}</div><div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-top:2px">${label}</div></div>`;
+    stats.innerHTML=stat('Guardias',DB.guardias.length)+stat('Motos',DB.tricimotos.length)+stat('Tamaño',kb+' KB');
+  }
 }
 function agregarDiaDescanso(){
   const sel=document.getElementById('nuevo-dia-descanso');
