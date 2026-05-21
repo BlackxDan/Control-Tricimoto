@@ -1594,7 +1594,12 @@ function saveDB(){ try{ localStorage.setItem('tricimoto_db', JSON.stringify(DB))
 function loadDB(){
   try{
     const d = localStorage.getItem('tricimoto_db');
-    if(d) DB = JSON.parse(d);
+    if(d){
+      DB = JSON.parse(d);
+      if(!DB.pagosTienda) DB.pagosTienda=[];
+      if(!DB.diasDescanso) DB.diasDescanso=['Domingo'];
+      if(!DB.config) DB.config={tarifa:15};
+    }
   }catch(e){}
 }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6) }
@@ -1618,8 +1623,7 @@ function seedData(){
     {id:m4, placa:'TRI-004', numero:'M-04', modelo:'Lifan', color:'Blanco', tarifa:15, estado:'mantenimiento', conductor:c4},
   ];
   // Solo registros de hoy como base limpia — sin deudas artificiales
-  const hoy = new Date();
-  const fs = hoy.toISOString().slice(0,10);
+  const fs = todayStr();
   const guardias = [];
   DB.tricimotos.filter(m=>m.estado==='activa').forEach(m=>{
     guardias.push({id:uid(),motoId:m.id,conductorId:m.conductor,fecha:fs,esperado:m.tarifa,entregado:m.tarifa,estado:'pagado',obs:'Dato inicial'});
@@ -1640,7 +1644,9 @@ function getMoto(id){ return DB.tricimotos.find(m=>m.id===id)||{placa:'?',numero
 function getConductor(id){ return DB.conductores.find(c=>c.id===id)||{nombres:'Sin asignar'} }
 function fmtFecha(s){ if(!s)return'—'; const p=s.split('-'); return `${p[2]}/${p[1]}/${p[0]}` }
 function fmtMoney(n){ return'$'+Number(n||0).toFixed(2) }
-function todayStr(){ return new Date().toISOString().slice(0,10) }
+function dateStr(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0') }
+function todayStr(){ return dateStr(new Date()) }
+function shortName(n){ return (n||'').split(' ').slice(0,2).join(' ') }
 
 function badgeEstado(e){
   const m={activa:'badge-green',activo:'badge-green',mantenimiento:'badge-amber',inactiva:'badge-gray',inactivo:'badge-gray'};
@@ -1769,7 +1775,7 @@ function renderDashboard(){
       const m=getMoto(g.motoId), c=getConductor(g.conductorId);
       const cls={'pagado':'pagado','incompleto':'pendiente','no_pago':'no-pago','descanso':'descanso'}[g.estado]||'pendiente';
       return `<div class="guardia-card ${cls}">
-        <div class="gc-header"><div><div class="gc-moto">${m.numero} · ${m.placa}</div><div class="gc-conductor">${c.nombres.split(' ').slice(0,2).join(' ')}</div></div>${badgePago(g.estado)}</div>
+        <div class="gc-header"><div><div class="gc-moto">${m.numero} · ${m.placa}</div><div class="gc-conductor">${shortName(c.nombres)}</div></div>${badgePago(g.estado)}</div>
         <div class="gc-monto">${fmtMoney(g.entregado)}</div>
         <div class="gc-esperado">Esperado: ${fmtMoney(g.esperado)}</div>
       </div>`;
@@ -1778,7 +1784,7 @@ function renderDashboard(){
     motosActivas.filter(m=>!yaRegistradas.includes(m.id)).forEach(m=>{
       const c=getConductor(m.conductor);
       html+=`<div class="guardia-card pendiente" style="opacity:.75;cursor:pointer" onclick="openModal('modal-guardia',true)">
-        <div class="gc-header"><div><div class="gc-moto">${m.numero} · ${m.placa}</div><div class="gc-conductor">${c.nombres.split(' ').slice(0,2).join(' ')}</div></div><span class="badge badge-amber">Pendiente</span></div>
+        <div class="gc-header"><div><div class="gc-moto">${m.numero} · ${m.placa}</div><div class="gc-conductor">${shortName(c.nombres)}</div></div><span class="badge badge-amber">Pendiente</span></div>
         <div class="gc-monto" style="color:var(--text3)">—</div>
         <div class="gc-esperado">Toca para registrar</div>
       </div>`;
@@ -1795,7 +1801,7 @@ function renderDashboard(){
   // Chart 7 días
   const chart = document.getElementById('chart-7dias');
   const dias=[]; const hoyD=new Date();
-  for(let i=6;i>=0;i--){ const d=new Date(hoyD); d.setDate(d.getDate()-i); dias.push(d.toISOString().slice(0,10)); }
+  for(let i=6;i>=0;i--){ const d=new Date(hoyD); d.setDate(d.getDate()-i); dias.push(dateStr(d)); }
   const vals = dias.map(f=>DB.guardias.filter(g=>g.fecha===f).reduce((s,g)=>s+g.entregado,0));
   const maxV = Math.max(...vals,1);
   const diasNom = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
@@ -1827,7 +1833,7 @@ function _cardPago(g, m, c){
     <div class="g-card-top">
       <div>
         <div class="g-card-id">${m.numero} · ${m.placa}</div>
-        <div class="g-card-fecha">${c.nombres.split(' ').slice(0,2).join(' ')} · ${fmtFecha(g.fecha)}</div>
+        <div class="g-card-fecha">${shortName(c.nombres)} · ${fmtFecha(g.fecha)}</div>
       </div>
       ${badgePago(g.estado)}
     </div>
@@ -1852,7 +1858,7 @@ function _cardPendiente(m, c){
     <div class="g-card-top">
       <div>
         <div class="g-card-id">${m.numero} · ${m.placa}</div>
-        <div class="g-card-fecha">${c.nombres.split(' ').slice(0,2).join(' ')} · tarifa ${fmtMoney(m.tarifa)}/día</div>
+        <div class="g-card-fecha">${shortName(c.nombres)} · tarifa ${fmtMoney(m.tarifa)}/día</div>
       </div>
       <span class="badge badge-gray">Sin registrar</span>
     </div>
@@ -1931,7 +1937,7 @@ function renderGuardias(tab){
   let lista=[];
   if(tab==='semana'){
     const lim=new Date(); lim.setDate(lim.getDate()-6);
-    lista=DB.guardias.filter(g=>g.fecha>=lim.toISOString().slice(0,10));
+    lista=DB.guardias.filter(g=>g.fecha>=dateStr(lim));
   }
   else if(tab==='pendientes') lista=DB.guardias.filter(g=>g.estado==='no_pago'||g.estado==='incompleto');
   else lista=[...DB.guardias].sort((a,b)=>b.fecha.localeCompare(a.fecha));
@@ -1957,7 +1963,7 @@ function renderGuardias(tab){
       return `<tr>
         <td style="font-family:'DM Mono',monospace;font-size:12px">${fmtFecha(g.fecha)}</td>
         <td><b>${m.numero}</b> <span style="color:var(--text3)">${m.placa}</span></td>
-        <td>${c.nombres.split(' ').slice(0,2).join(' ')}</td>
+        <td>${shortName(c.nombres)}</td>
         <td class="deuda-tag">${fmtMoney(g.esperado)}</td>
         <td class="deuda-tag">${fmtMoney(g.entregado)}</td>
         <td>${badgePago(g.estado)}</td>
@@ -1977,12 +1983,6 @@ function renderGuardias(tab){
     }).join('')+`</div>`;
 
   cont.innerHTML=tabla+cards;
-}
-
-function eliminarGuardia(id){
-  DB.guardias=DB.guardias.filter(g=>g.id!==id);
-  saveDB(); renderGuardias(guardiaTab); renderDashboard(); updateBadges();
-  showToast('Guardia eliminada');
 }
 
 function abrirPagoRapido(motoId){
@@ -2009,7 +2009,7 @@ function abrirAbono(id){
     <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 14px">
       <span style="color:var(--text2)">Fecha:</span><b>${fmtFecha(g.fecha)}</b>
       <span style="color:var(--text2)">Moto:</span><b>${m.numero} · ${m.placa}</b>
-      <span style="color:var(--text2)">Conductor:</span><b>${c.nombres.split(' ').slice(0,2).join(' ')}</b>
+      <span style="color:var(--text2)">Conductor:</span><b>${shortName(c.nombres)}</b>
       <span style="color:var(--text2)">Pagado:</span><b style="color:var(--green)">${fmtMoney(g.entregado)}</b>
       <span style="color:var(--text2)">Pendiente:</span><b style="color:var(--red)">${fmtMoney(pend)}</b>
     </div>`;
@@ -2064,7 +2064,7 @@ function renderMotos(filter=''){
       <td style="font-weight:700;font-family:'DM Mono',monospace">${m.numero}</td>
       <td style="font-weight:500">${m.placa}</td>
       <td>${m.modelo||'—'} <span style="color:var(--text3)">· ${m.color||'—'}</span></td>
-      <td>${m.conductor?c.nombres.split(' ').slice(0,2).join(' '):'<span style="color:var(--text3)">Sin asignar</span>'}</td>
+      <td>${m.conductor?shortName(c.nombres):'<span style="color:var(--text3)">Sin asignar</span>'}</td>
       <td class="deuda-tag">${fmtMoney(m.tarifa)}/día</td>
       <td>${diasTag(m.diasLibres)}</td>
       <td>${badgeEstado(m.estado)}</td>
@@ -2085,7 +2085,7 @@ function renderMotos(filter=''){
         ${badgeEstado(m.estado)}
       </div>
       <div style="font-size:13px;color:var(--text2);margin-bottom:3px">${m.modelo||'—'} · ${m.color||'—'}</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:3px">Conductor: <b>${m.conductor?c.nombres.split(' ').slice(0,2).join(' '):'Sin asignar'}</b></div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:3px">Conductor: <b>${m.conductor?shortName(c.nombres):'Sin asignar'}</b></div>
       <div style="font-size:12px;color:var(--text2);margin-bottom:6px">Tarifa: <b>${fmtMoney(m.tarifa)}/día</b>${m.tienda?` · <b>${m.tienda}</b> día ${m.diaPago||'?'}`:''}</div>
       ${(m.diasLibres||[]).length?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${diasTag(m.diasLibres)}</div>`:''}
       <div class="m-card-actions">
@@ -2331,7 +2331,7 @@ function getAlertas(){
     const deuda=deudaConductor(c.id);
     if(deuda>0){
       const dias=DB.guardias.filter(g=>g.conductorId===c.id&&(g.estado==='no_pago'||g.estado==='incompleto')).length;
-      alertas.push({tipo:'red',ico:'⚠️',msg:`<b>${c.nombres.split(' ').slice(0,2).join(' ')}</b> — deuda de ${fmtMoney(deuda)} (${dias} guardia${dias>1?'s':''})`});
+      alertas.push({tipo:'red',ico:'⚠️',msg:`<b>${shortName(c.nombres)}</b> — deuda de ${fmtMoney(deuda)} (${dias} guardia${dias>1?'s':''})`});
     }
   });
   // Motos en mantenimiento
@@ -2381,7 +2381,7 @@ function renderReportes(tab){
     for(let w=0;w<5;w++){
       const ini=new Date(hoy); ini.setDate(ini.getDate()-(w*7+6));
       const fin=new Date(hoy); fin.setDate(fin.getDate()-w*7);
-      const iniS=ini.toISOString().slice(0,10), finS=fin.toISOString().slice(0,10);
+      const iniS=dateStr(ini), finS=dateStr(fin);
       const semGuard=DB.guardias.filter(g=>g.fecha>=iniS&&g.fecha<=finS&&g.estado!=='descanso');
       const cob=semGuard.reduce((s,g)=>s+g.entregado,0);
       const esp=semGuard.reduce((s,g)=>s+g.esperado,0);
@@ -2418,7 +2418,7 @@ function renderReportes(tab){
       const color=pct>=90?'var(--green)':pct>=70?'var(--accent)':'var(--red)';
       html+=`<div style="padding:14px 20px;border-bottom:1px solid var(--border)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <div style="font-weight:700;font-size:14px">${c.nombres.split(' ').slice(0,2).join(' ')}</div>
+          <div style="font-weight:700;font-size:14px">${shortName(c.nombres)}</div>
           <span style="font-size:11px;color:var(--text3)">${guard.length} guardias</span>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
@@ -2446,7 +2446,7 @@ function renderReportes(tab){
             <span style="background:var(--accent);color:#1a1200;font-family:'DM Mono',monospace;font-weight:800;font-size:12px;padding:4px 10px;border-radius:6px">${m.numero}</span>
             <div>
               <div style="font-weight:700;font-size:13px">${m.placa}</div>
-              <div style="font-size:11px;color:var(--text3)">${m.conductor?cond.nombres.split(' ').slice(0,2).join(' '):'Sin asignar'}</div>
+              <div style="font-size:11px;color:var(--text3)">${m.conductor?shortName(cond.nombres):'Sin asignar'}</div>
             </div>
           </div>
           ${badgeEstado(m.estado)}
@@ -2560,7 +2560,7 @@ function eliminarMoto(id){
 function eliminarConductor(id){
   const c=getConductor(id);
   pedirConfirmacion(
-    `¿Eliminar a ${c.nombres.split(' ').slice(0,2).join(' ')}?`,
+    `¿Eliminar a ${shortName(c.nombres)}?`,
     'Se eliminarán sus registros de guardias.',
     '👤',
     ()=>{
@@ -2629,7 +2629,7 @@ function guardarGuardia(){
   if(entregado>0&&esperado>0){
     if(entregado>=esperado) estadoAuto='pagado';
     else estadoAuto='incompleto';
-  }
+  } else if(entregado===0&&esperado>0) estadoAuto='no_pago';
   const obj={id:uid(),motoId,conductorId,fecha,esperado,entregado,estado:estadoAuto,obs:document.getElementById('g-obs').value.trim()};
   DB.guardias.push(obj);
   saveDB();
@@ -2710,7 +2710,7 @@ function poblarSelectMotos(selId){
 }
 function poblarSelectConductores(selId,val=''){
   const sel=document.getElementById(selId);
-  sel.innerHTML='<option value="">Sin asignar</option>'+DB.conductores.map(c=>`<option value="${c.id}"${c.id===val?' selected':''}>${c.nombres.split(' ').slice(0,2).join(' ')}</option>`).join('');
+  sel.innerHTML='<option value="">Sin asignar</option>'+DB.conductores.map(c=>`<option value="${c.id}"${c.id===val?' selected':''}>${shortName(c.nombres)}</option>`).join('');
 }
 function poblarDiasChecks(diasActivos){
   document.querySelectorAll('#moto-dias-checks input[type=checkbox]').forEach(cb=>{
@@ -2762,24 +2762,32 @@ function resetearDatos(){
 function exportarJSON(){
   const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`tricimoto-backup-${todayStr()}.json`; a.click();
+  a.download=`tricimoto-backup-${todayStr()}.json`; a.click(); URL.revokeObjectURL(a.href);
   showToast('Backup descargado ✓');
 }
 function exportarExcel(){
   const guardias=DB.guardias.map(g=>{
     const m=getMoto(g.motoId),c=getConductor(g.conductorId);
-    return [fmtFecha(g.fecha),m.numero,m.placa,c.nombres,g.esperado,g.entregado,g.estado,g.obs].join(',');
+    return [fmtFecha(g.fecha),m.numero,m.placa,c.nombres,g.esperado,g.entregado,g.estado,g.obs].map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(',');
   });
   const csv=['Fecha,Número,Placa,Conductor,Esperado,Entregado,Estado,Observaciones',...guardias].join('\n');
   const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`guardias-${todayStr()}.csv`; a.click();
+  a.download=`guardias-${todayStr()}.csv`; a.click(); URL.revokeObjectURL(a.href);
   showToast('CSV exportado ✓');
 }
 function restaurarJSON(input){
   const f=input.files[0]; if(!f)return;
   const r=new FileReader();
-  r.onload=e=>{ try{ DB=JSON.parse(e.target.result); saveDB(); renderPage(currentPage); showToast('Backup restaurado ✓'); }catch(err){showToast('Error al leer el archivo');} };
+  r.onload=e=>{ try{
+    const parsed=JSON.parse(e.target.result);
+    if(!parsed||typeof parsed!=='object'||Array.isArray(parsed)||!Array.isArray(parsed.tricimotos)||!Array.isArray(parsed.conductores)||!Array.isArray(parsed.guardias)){showToast('Archivo inválido — estructura incorrecta');return;}
+    DB=parsed;
+    if(!DB.pagosTienda) DB.pagosTienda=[];
+    if(!DB.diasDescanso) DB.diasDescanso=['Domingo'];
+    if(!DB.config) DB.config={tarifa:15};
+    saveDB(); renderPage(currentPage); showToast('Backup restaurado ✓');
+  }catch(err){showToast('Error al leer el archivo');} };
   r.readAsText(f);
 }
 
