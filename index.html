@@ -30,26 +30,75 @@ button, a, [onclick], input, select, textarea {
   outline: none;
 }
 
-/* ── Modales: solo opacity, sin transform (evita repaints) */
-@keyframes modalFade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-.modal-overlay.open .modal { animation: modalFade .15s ease both; }
+/* ═══════════════════════════════════════════════════════════
+ * MOTION SYSTEM — todas las animaciones en un solo lugar
+ * Solo opacity y transform para evitar repaints (GPU layer)
+ * ═══════════════════════════════════════════════════════════ */
 
-/* ── Toast */
-@keyframes toastIn {
-  from { opacity: 0; transform: translateY(8px); }
+/* ── Página: fade + slide suave al cambiar sección */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-#toast.show { animation: toastIn .15s ease both; }
 
-/* ── Confirmación */
-@keyframes confirmFade {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+/* ── Modal: slide-up con micro-overshoot */
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(18px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);   }
 }
-#confirm-overlay.open #confirm-box { animation: confirmFade .15s ease both; }
+.modal-overlay.open .modal { animation: modalIn .24s cubic-bezier(.34,1.15,.64,1) both; }
+
+/* ── Diálogo de confirmación: spring bounce */
+@keyframes confirmBounce {
+  from { opacity: 0; transform: scale(.84); }
+  65%  {             transform: scale(1.05); }
+  to   { opacity: 1; transform: scale(1);   }
+}
+#confirm-overlay.open #confirm-box { animation: confirmBounce .3s cubic-bezier(.34,1.4,.64,1) both; }
+
+/* ── Toast: springy desde abajo */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px) scale(.9); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1);  }
+}
+#toast.show { animation: toastIn .24s cubic-bezier(.34,1.2,.64,1) both; }
+
+/* ── Cards con stagger: aparecen en cascada */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.anim      { animation: cardIn .22s cubic-bezier(.4,0,.2,1) both; }
+.anim-d1   { animation-delay: .05s; }
+.anim-d2   { animation-delay: .10s; }
+.anim-d3   { animation-delay: .15s; }
+.anim-d4   { animation-delay: .20s; }
+.anim-d5   { animation-delay: .24s; }
+
+/* ── KPI cards entrada escalonada */
+@keyframes kpiIn {
+  from { opacity: 0; transform: translateY(8px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);   }
+}
+
+/* ── Barras del gráfico: crecen desde la base */
+@keyframes barGrow {
+  from { transform: scaleY(0); opacity: .4; }
+  to   { transform: scaleY(1); opacity: 1;  }
+}
+
+/* ── Login logo pulse al cargar */
+@keyframes logoPulse {
+  0%,100% { box-shadow: 0 8px 32px rgba(245,200,0,.4); }
+  50%      { box-shadow: 0 8px 48px rgba(245,200,0,.7); }
+}
+
+/* ── Número KPI: cuenta desde 0 (via clip-path) */
+@keyframes numIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 
 /* ─── TOKENS ─────────────────────────────────────────────── */
 
@@ -227,6 +276,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   text-align: left;
   position: relative;
   letter-spacing: .2px;
+  transition: background .14s, color .14s, transform .14s;
 }
 .nav-item svg {
   width: 15px; height: 15px;
@@ -420,7 +470,10 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
 
 /* ─── PAGE ────────────────────────────────────────────────── */
 .page { display: none; }
-.page.active { display: block; }
+.page.active {
+  display: block;
+  animation: pageIn .22s cubic-bezier(.4,0,.2,1) both;
+}
 
 /* ─── KPI CARDS ──────────────────────────────────────────── */
 .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
@@ -654,6 +707,7 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer;
   position: relative;
   transform-origin: bottom;
+  animation: barGrow .55s cubic-bezier(.4,0,.2,1) both;
 }
 .chart-bar:hover {
   background: var(--accent-dark);
@@ -775,7 +829,7 @@ input:focus, select:focus, textarea:focus {
 
 /* ─── PROGRESS ───────────────────────────────────────────── */
 .progress { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 3px; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width .7s cubic-bezier(.4,0,.2,1); }
 
 /* ─── TOAST ──────────────────────────────────────────────── */
 #toast {
@@ -944,6 +998,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: 14px;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 10px;
+  animation: logoPulse 2.4s ease-in-out infinite;
 }
 .login-logo svg { width:28px; height:28px; fill:none; stroke:#1a1200; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .login-brand {
@@ -1838,6 +1893,31 @@ function fmtFecha(s){ if(!s)return'—'; const p=s.split('-'); return `${p[2]}/$
 function fmtMoney(n){ return'$'+Number(n||0).toFixed(2) }
 function dateStr(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0') }
 function shortName(n){ return (n||'').split(' ').slice(0,2).join(' ') }
+
+// ── Animación count-up para valores numéricos en KPIs
+function countUp(el, target, isMoney=false, duration=520){
+  if(!el) return;
+  const num = parseFloat(target)||0;
+  if(num===0){ el.textContent = isMoney?'$0.00':'0'; return; }
+  const start = performance.now();
+  const easeOut = t => 1-Math.pow(1-t, 3);
+  function tick(now){
+    const prog = Math.min((now-start)/duration, 1);
+    const val = num * easeOut(prog);
+    el.textContent = isMoney ? '$'+val.toFixed(2) : Math.round(val).toString();
+    if(prog<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// ── Añade clase anim + delay escalonado a los hijos de un contenedor
+function staggerChildren(container, selector='[class*="card"],[class*="anim"]'){
+  const items = container.querySelectorAll(':scope > *');
+  items.forEach((el,i)=>{
+    el.classList.add('anim');
+    el.style.animationDelay = Math.min(i*0.05,0.25)+'s';
+  });
+}
 // todayStr: usa fecha local (evita error UTC+offset, ej. Ecuador UTC-5 → fecha incorrecta tras 19:00)
 let _todayCache = '';
 function todayStr(){
@@ -1967,13 +2047,19 @@ function renderDashboard(){
 
   const activas = DB.tricimotos.filter(m=>m.estado==='activa');
 
-  // KPIs — 6 DOM writes en batch
-  document.getElementById('kpi-hoy').textContent = fmtMoney(cobradoHoy);
-  document.getElementById('kpi-deuda').textContent = fmtMoney(deudaTotal);
+  // KPIs con count-up animado
+  countUp(document.getElementById('kpi-hoy'),    cobradoHoy,  true);
+  countUp(document.getElementById('kpi-deuda'),  deudaTotal,  true);
   document.getElementById('kpi-deuda-count').textContent = conductoresDeuda.size+' conductores con mora';
-  document.getElementById('kpi-activas').textContent = activas.length;
+  countUp(document.getElementById('kpi-activas'), activas.length, false);
   document.getElementById('kpi-total-motos').textContent = DB.tricimotos.length;
-  document.getElementById('kpi-mes').textContent = fmtMoney(mesCobrado);
+  countUp(document.getElementById('kpi-mes'),    mesCobrado,  true);
+  // Stagger entrada de KPI cards
+  const kpiGrid = document.querySelector('#page-dashboard .kpi-grid');
+  if(kpiGrid) kpiGrid.querySelectorAll('.kpi-card').forEach((el,i)=>{
+    el.style.animation='none'; el.offsetHeight; // reset
+    el.style.animation=`kpiIn .22s cubic-bezier(.4,0,.2,1) ${i*0.06}s both`;
+  });
 
   const opts={weekday:'long',day:'numeric',month:'long',year:'numeric'};
   document.getElementById('fecha-hoy-label').textContent = hoyD.toLocaleDateString('es-EC',opts);
@@ -2013,6 +2099,11 @@ function renderDashboard(){
       </div>`;
     });
     cont.innerHTML = html;
+    // Stagger de las cards del dashboard
+    cont.querySelectorAll('.guardia-card').forEach((el,i)=>{
+      el.classList.add('anim');
+      el.style.animationDelay = Math.min(i*0.06,0.3)+'s';
+    });
   }
 
   // ── Alertas (usa cache getGuardiasByConductor) ───────────────────────
@@ -2028,7 +2119,8 @@ function renderDashboard(){
   document.getElementById('chart-7dias').innerHTML = vals7.map((v,i)=>{
     const pct = Math.round((v/maxV)*88)+4;
     const dn = diasNom[new Date(dias7[i]+'T12:00:00').getDay()];
-    return `<div class="chart-bar-wrap"><div class="chart-bar-val" style="font-size:10px;color:var(--text3)">${v>0?'$'+Math.round(v):''}</div><div class="chart-bar" style="height:${pct}px"></div><div class="chart-bar-label">${dn}</div></div>`;
+    const delay = (i*0.06).toFixed(2);
+    return `<div class="chart-bar-wrap anim" style="animation-delay:${delay}s"><div class="chart-bar-val" style="font-size:10px;color:var(--text3)">${v>0?'$'+Math.round(v):''}</div><div class="chart-bar" style="height:${pct}px;animation-delay:${delay}s"></div><div class="chart-bar-label">${dn}</div></div>`;
   }).join('');
 }
 
@@ -2292,6 +2384,11 @@ function renderGuardias(tab){
     }).join('')+`</div>`;
 
   cont.innerHTML=tabla+cards;
+  // Stagger cards mobile de guardias
+  cont.querySelectorAll('.cards-mobile .g-card').forEach((el,i)=>{
+    el.classList.add('anim');
+    el.style.animationDelay = Math.min(i*0.04,0.28)+'s';
+  });
 }
 
 function abrirPagoRapido(motoId){
@@ -2405,6 +2502,9 @@ function renderMotos(filter=''){
       </div>
     </div>`;
   }).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">Sin tricimotos</div>`;
+  cc.querySelectorAll('.m-card').forEach((el,i)=>{
+    el.classList.add('anim'); el.style.animationDelay=Math.min(i*0.04,0.24)+'s';
+  });
 }
 function filterMotos(v){ renderMotos(v) }
 
@@ -2666,6 +2766,10 @@ function renderConductores(filter=''){
       </div>
     </div>`;
   }).join('');
+  let ccc=document.getElementById('conductores-cards-mob');
+  if(ccc) ccc.querySelectorAll('.c-card').forEach((el,i)=>{
+    el.classList.add('anim'); el.style.animationDelay=Math.min(i*0.04,0.24)+'s';
+  });
 }
 function filterConductores(v){ renderConductores(v) }
 
