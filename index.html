@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="no-session">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=overlays-content">
@@ -9,15 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TricimotoCtrl">
 <title>TricimotoControl · Bendición de Dios</title>
-<script>
-  // Siempre mostrar login al abrir — nunca recordar sesión
-  localStorage.removeItem('tc_session');
-  document.documentElement.classList.add('no-session');
-</script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /*
  * ═══════════════════════════════════════════════════════════
@@ -117,43 +109,43 @@ button, a, [onclick], input, select, textarea {
 /* ─── TOKENS ─────────────────────────────────────────────── */
 
 :root {
-  --bg:           #0a0a0a;
-  --surface:      #111111;
-  --surface2:     #161616;
-  --surface3:     #1c1c1c;
-  --border:       #2a2a2a;
-  --border2:      #383838;
-  --text:         #f0f0f0;
-  --text2:        #aaaaaa;
-  --text3:        #666666;
+  --bg:           #f7f3e8;
+  --surface:      #ffffff;
+  --surface2:     #fdfaf2;
+  --surface3:     #f9f5e7;
+  --border:       #ede5c4;
+  --border2:      #ddd090;
+  --text:         #18120a;
+  --text2:        #5c4d18;
+  --text3:        #9c8830;
   --accent:       #f5c800;
   --accent-dark:  #c9a200;
-  --accent-dim:   #1a1600;
-  --accent-text:  #f5c800;
-  --sid:          #050505;
-  --sid2:         #0d0d0d;
-  --sid-text:     #f5c800;
-  --sid-text2:    rgba(245,200,0,.45);
+  --accent-dim:   #fffbe6;
+  --accent-text:  #6b5200;
+  --sid:          #130f00;
+  --sid2:         #1e1800;
+  --sid-text:     #f0de6a;
+  --sid-text2:    rgba(240,222,106,.45);
   --sid-active:   #f5c800;
-  --sid-hover:    rgba(245,200,0,.08);
-  --green:        #22c55e;
-  --green-bg:     #0a1f12;
-  --green-text:   #4ade80;
-  --red:          #ef4444;
-  --red-bg:       #1f0a0a;
-  --red-text:     #f87171;
-  --blue:         #3b82f6;
-  --blue-bg:      #0a1020;
-  --blue-text:    #60a5fa;
-  --orange:       #f97316;
-  --orange-bg:    #1f1000;
-  --gray-bg:      #1a1a1a;
+  --sid-hover:    rgba(245,200,0,.10);
+  --green:        #1a7a40;
+  --green-bg:     #e4f5ec;
+  --green-text:   #0c4822;
+  --red:          #b83025;
+  --red-bg:       #fcecea;
+  --red-text:     #6f1c14;
+  --blue:         #1752a0;
+  --blue-bg:      #e4eef9;
+  --blue-text:    #0c3168;
+  --orange:       #c06000;
+  --orange-bg:    #fff2df;
+  --gray-bg:      #f2edda;
   --r:            12px;
   --r-sm:         8px;
   --r-lg:         18px;
-  --sh:           0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.5);
-  --sh-md:        0 8px 32px rgba(0,0,0,.6), 0 2px 8px rgba(0,0,0,.4);
-  --sh-accent:    0 8px 32px rgba(245,200,0,.25), 0 2px 8px rgba(0,0,0,.4);
+  --sh:           0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.06);
+  --sh-md:        0 8px 32px rgba(0,0,0,.10), 0 2px 8px rgba(0,0,0,.06);
+  --sh-accent:    0 8px 32px rgba(245,200,0,.22), 0 2px 8px rgba(0,0,0,.06);
   --sid-w:        228px;
   --top-h:        58px;
   --font:         'Syne', sans-serif;
@@ -171,49 +163,24 @@ body {
   font-size: 15px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  /* NO body animation — that's what causes the flash */
 }
-
-/*
- * ── CONTROL DE SESIÓN (CSS puro, sin parpadeo) ──────────────
- * .no-session  → hay que mostrar login, ocultar app
- * .has-session → hay que ocultar login, mostrar app
- *
- * El <script> inline en el <head> asigna la clase ANTES de
- * que el browser pinte el primer píxel, así que nunca hay flash.
- */
-
-/* ── Estado por defecto seguro: si no hay ninguna clase, ocultar todo ── */
-#sidebar, #main { display: none; }
-#login-screen { display: none; }
-
-/* Sin sesión: el app completo es invisible */
-html.no-session #sidebar,
-html.no-session #main { display: none !important; }
-
-/* Sin sesión: login visible de inmediato (block para scroll) */
-html.no-session #login-screen { display: block !important; }
-
-/* Con sesión: login oculto, app visible */
-html.has-session #login-screen { display: none !important; }
-html.has-session #sidebar { display: flex !important; }
-html.has-session #main { display: flex !important; }
-
-/* ─── ANIMATIONS ──────────────────────────────────────────── */
 
 /* ─── SIDEBAR ─────────────────────────────────────────────── */
 #sidebar {
   width: var(--sid-w);
   background: var(--sid);
+  display: flex;
   flex-direction: column;
   position: fixed;
   top: 0; left: 0;
   height: 100vh;
-  height: 100dvh;
+  height: 100dvh; /* dynamic viewport height en móvil */
   z-index: 100;
-  
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
   box-shadow: 4px 0 24px rgba(0,0,0,.18);
   transform: translateZ(0);
-  /* will-change se activa solo durante la animación, vía JS */
+  will-change: transform;
 }
 /* Subtle texture on sidebar */
 #sidebar::after {
@@ -224,8 +191,8 @@ html.has-session #main { display: flex !important; }
     135deg,
     transparent,
     transparent 40px,
-    rgba(245,200,0,.025) 40px,
-    rgba(245,200,0,.025) 80px
+    rgba(245,200,0,.015) 40px,
+    rgba(245,200,0,.015) 80px
   );
   pointer-events: none;
 }
@@ -246,6 +213,7 @@ html.has-session #main { display: flex !important; }
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(245,200,0,.4);
+  transition: transform .3s, box-shadow .3s;
 }
 .brand:hover .brand-icon {
   transform: rotate(8deg) scale(1.08);
@@ -275,6 +243,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   color: var(--sid-text2);
   font-size: 13px;
   font-weight: 500;
+  transition: background .15s, color .15s, transform .12s;
   border: none;
   background: none;
   width: 100%;
@@ -289,6 +258,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   stroke: currentColor; fill: none;
   stroke-width: 1.8;
   stroke-linecap: round; stroke-linejoin: round;
+  transition: transform .2s;
 }
 .nav-item:hover {
   background: var(--sid-hover);
@@ -357,6 +327,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   gap: 10px;
   position: relative; z-index: 1;
   cursor: default;
+  transition: background .2s;
   flex-shrink: 0;        /* nunca se comprime ni sale de pantalla */
 }
 .sidebar-user:hover { background: rgba(245,200,0,.06); }
@@ -369,6 +340,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   font-size: 11.5px; font-weight: 800;
   flex-shrink: 0;
   border: 2px solid rgba(245,200,0,.3);
+  transition: transform .25s;
 }
 .sidebar-user:hover .avatar { transform: rotate(-6deg) scale(1.1); }
 .user-name { font-size: 12.5px; font-weight: 600; color: var(--sid-text); }
@@ -383,10 +355,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   display: flex; align-items: center;
   padding: 0 24px; gap: 16px;
   position: sticky; top: 0; z-index: 50;
-  /* position:relative necesario para ::before absoluto */
-  position: sticky;
-  box-shadow: 0 1px 0 var(--border), 0 2px 12px rgba(0,0,0,.35);
-  overflow: hidden;
+  box-shadow: 0 1px 0 var(--border), 0 2px 12px rgba(0,0,0,.04);
 }
 /* Yellow accent line on topbar */
 #topbar::before {
@@ -427,6 +396,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   border-radius: var(--r-sm);
   font-size: 13px; font-weight: 600;
   cursor: pointer; border: none;
+  transition: transform .12s, box-shadow .15s, background .12s, border-color .12s;
   font-family: var(--font);
   letter-spacing: .2px;
   position: relative; overflow: hidden;
@@ -436,6 +406,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   content: '';
   position: absolute; inset: 0;
   background: rgba(255,255,255,0);
+  transition: background .12s;
 }
 .btn:hover::before { background: rgba(255,255,255,.12); }
 .btn:active { transform: scale(.96); }
@@ -466,20 +437,20 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
 .btn-danger {
   background: var(--red-bg);
   color: var(--red-text);
-  border: 1.5px solid rgba(239,68,68,.25);
+  border: 1.5px solid #f0c0bc;
 }
-.btn-danger:hover { background: rgba(239,68,68,.15); border-color: rgba(239,68,68,.4); }
+.btn-danger:hover { background: #f8d8d5; border-color: #e0a09a; }
 .btn-success {
   background: var(--green-bg);
   color: var(--green-text);
-  border: 1.5px solid rgba(34,197,94,.2);
+  border: 1.5px solid #a8dcc0;
 }
-.btn-success:hover { background: rgba(34,197,94,.15); border-color: rgba(34,197,94,.35); }
+.btn-success:hover { background: #d0f0de; }
 
 /* ─── CONTENT ─────────────────────────────────────────────── */
-#content { padding: 24px; flex: 1; overflow-y: auto; contain: layout style paint; }
+#content { padding: 24px; flex: 1; overflow-y: auto; contain: layout style; }
 
-/* ─── PAGE ────────────────────────────────────────────────── */
+/* ─── PAGE TRANSITIONS — NO FLASH ────────────────────────── */
 .page { display: none; }
 .page.active {
   display: block;
@@ -493,6 +464,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   border: 1px solid var(--border);
   border-radius: var(--r);
   padding: 20px 22px;
+  transition: transform .2s, box-shadow .2s;
   position: relative; overflow: hidden;
 }
 .kpi-card::after {
@@ -503,6 +475,7 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   border-radius: 50%;
   background: var(--accent);
   opacity: .04;
+  transition: transform .3s, opacity .3s;
 }
 .kpi-card:hover {
   transform: translateY(-2px);
@@ -526,14 +499,14 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
 .kpi-up { color: var(--green); }
 .kpi-down { color: var(--red); }
 .kpi-card.accent {
-  background: #0d0a00;
-  border-color: rgba(245,200,0,.2);
+  background: var(--sid);
+  border-color: var(--sid);
 }
-.kpi-card.accent::after { background: var(--accent); opacity: .12; }
-.kpi-card.accent .kpi-label { color: rgba(245,200,0,.5); }
+.kpi-card.accent::after { background: var(--accent); opacity: .08; }
+.kpi-card.accent .kpi-label { color: rgba(240,222,106,.5); }
 .kpi-card.accent .kpi-value { color: var(--accent); }
-.kpi-card.accent .kpi-sub { color: rgba(245,200,0,.6); }
-.kpi-card.accent:hover { box-shadow: 0 8px 32px rgba(245,200,0,.2), 0 2px 8px rgba(0,0,0,.5); border-color: rgba(245,200,0,.35); }
+.kpi-card.accent .kpi-sub { color: rgba(240,222,106,.6); }
+.kpi-card.accent:hover { box-shadow: var(--sh-accent); }
 
 /* ─── CARD ───────────────────────────────────────────────── */
 .card {
@@ -542,8 +515,9 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   border-radius: var(--r);
   overflow: hidden;
   margin-bottom: 20px;
+  transition: box-shadow .2s;
 }
-.card:hover { box-shadow: var(--sh-md); border-color: var(--border2); transform: translateY(-1px); }
+.card:hover { box-shadow: var(--sh); }
 .card-header {
   padding: 18px 22px;
   border-bottom: 1px solid var(--border);
@@ -571,9 +545,10 @@ td {
   border-bottom: 1px solid var(--border);
   font-size: 13.5px;
   color: var(--text);
+  transition: background .1s;
 }
 tr:last-child td { border-bottom: none; }
-tbody tr:hover td { background: var(--accent-dim); }
+tbody tr:hover td { background: var(--accent-dim) !important; }
 .table-actions { display: flex; gap: 6px; align-items: center; }
 
 /* ─── BADGES ─────────────────────────────────────────────── */
@@ -583,6 +558,7 @@ tbody tr:hover td { background: var(--accent-dim); }
   border-radius: 20px;
   font-size: 11px; font-weight: 600;
   letter-spacing: .2px;
+  transition: transform .15s;
 }
 .badge::before {
   content: '';
@@ -608,6 +584,7 @@ tbody tr:hover td { background: var(--accent-dim); }
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   opacity: 0; pointer-events: none;
+  transition: opacity .22s;
 }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
 .modal {
@@ -617,6 +594,13 @@ tbody tr:hover td { background: var(--accent-dim); }
   max-height: 90vh; overflow-y: auto;
   box-shadow: var(--sh-md);
   border: 1px solid var(--border);
+}
+.modal-overlay.open .modal {
+  animation: modalIn .25s cubic-bezier(.34,1.4,.64,1) both;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.93) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 .modal-header {
   padding: 20px 24px 16px;
@@ -632,6 +616,7 @@ tbody tr:hover td { background: var(--accent-dim); }
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   font-size: 16px; color: var(--text2);
+  transition: background .15s, transform .15s;
 }
 .modal-close:hover { background: var(--border); transform: rotate(90deg); }
 .modal-body  { padding: 20px 24px; }
@@ -662,6 +647,7 @@ input, select, textarea {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: var(--text);
   background: var(--surface);
+  transition: border-color .15s, box-shadow .15s;
   outline: none;
 }
 input[type=number] {
@@ -673,32 +659,8 @@ input:focus, select:focus, textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(245,200,0,.18);
 }
-
-/* ── Neutralizar estilos globales dentro del login ─────────
-   Evita que transiciones y colores del app se filtren al login
-   y causen parpadeo en Android al escribir.                  */
-#login-screen input,
-#login-screen input:focus,
-#login-screen input:active {
-  /* Colores propios del login */
-  background: rgba(255,255,255,.06) !important;
-  color: var(--sid-text) !important;
-  border-color: rgba(245,200,0,.2) !important;
-  /* Sin transición — elimina el flash en cada tecla */
-  /* Cancelar animaciones heredadas */
-  /* Forzar fondo oscuro incluso con autofill de Android/iOS */
-  -webkit-box-shadow: 0 0 0 100px #141000 inset !important;
-  -webkit-text-fill-color: var(--sid-text) !important;
-  box-shadow: none !important;
-}
-#login-screen input:focus {
-  border-color: var(--accent) !important;
-  outline: none !important;
-}
-#login-screen input::placeholder {
-  color: rgba(240,222,106,.3) !important;
-  -webkit-text-fill-color: rgba(240,222,106,.3) !important;
-}
+textarea { resize: vertical; min-height: 72px; }
+select { cursor: pointer; }
 
 /* ─── CHARTS ─────────────────────────────────────────────── */
 .chart-bars {
@@ -708,12 +670,14 @@ input:focus, select:focus, textarea:focus {
 .chart-bar-wrap {
   flex: 1; display: flex; flex-direction: column;
   align-items: center; gap: 4px;
+  transition: opacity .15s;
 }
 .chart-bars:hover .chart-bar-wrap:not(:hover) { opacity: .55; }
 .chart-bar {
   width: 100%;
   background: var(--accent);
   border-radius: 5px 5px 0 0;
+  transition: height .55s cubic-bezier(.4,0,.2,1), background .15s, transform .15s;
   min-height: 3px;
   cursor: pointer;
   position: relative;
@@ -734,12 +698,13 @@ input:focus, select:focus, textarea:focus {
   font-size: 13px;
   display: flex; align-items: flex-start; gap: 10px;
   margin-bottom: 8px;
+  transition: transform .15s;
 }
 .alert:hover { transform: translateX(3px); }
 .alert-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-.alert-red    { background: var(--red-bg);    color: var(--red-text);    border: 1px solid rgba(239,68,68,.2); }
-.alert-amber  { background: var(--accent-dim); color: var(--accent-text); border: 1px solid rgba(245,200,0,.2); }
-.alert-green  { background: var(--green-bg);  color: var(--green-text);  border: 1px solid rgba(34,197,94,.15); }
+.alert-red    { background: var(--red-bg);    color: var(--red-text);    border: 1px solid #f0c0bc; }
+.alert-amber  { background: var(--accent-dim); color: var(--accent-text); border: 1px solid #eed898; }
+.alert-green  { background: var(--green-bg);  color: var(--green-text);  border: 1px solid #a8dec0; }
 
 /* ─── DEUDA TAG ───────────────────────────────────────────── */
 .deuda-tag { font-family: var(--mono); font-size: 12.5px; font-weight: 500; }
@@ -761,6 +726,7 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer; border: none;
   background: none;
   color: var(--text2);
+  transition: all .15s;
   letter-spacing: .1px;
 }
 .tab:hover { color: var(--text); background: rgba(245,200,0,.12); }
@@ -800,21 +766,21 @@ input:focus, select:focus, textarea:focus {
   border-radius: var(--r);
   padding: 16px;
   position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
   cursor: default;
 }
 .guardia-card::before {
   content: ''; position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
+  transition: height .2s;
 }
 .guardia-card:hover { transform: translateY(-2px); box-shadow: var(--sh-md); }
 .guardia-card:hover::before { height: 4px; }
-.guardia-card.pagado::before    { background: var(--green); }
-.guardia-card.pendiente::before  { background: var(--accent); }
-.guardia-card.incompleto::before { background: var(--accent); }
-.guardia-card.no-pago::before    { background: var(--red); }
-.guardia-card.no_pago::before    { background: var(--red); }
-.guardia-card.descanso::before   { background: var(--border2); }
+.guardia-card.pagado::before   { background: var(--green); }
+.guardia-card.pendiente::before { background: var(--accent); }
+.guardia-card.no-pago::before  { background: var(--red); }
+.guardia-card.descanso::before { background: var(--border2); }
 .gc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .gc-moto { font-size: 13px; font-weight: 700; }
 .gc-conductor { font-size: 11px; color: var(--text3); margin-top: 2px; }
@@ -845,17 +811,18 @@ input:focus, select:focus, textarea:focus {
 /* ─── TOAST ──────────────────────────────────────────────── */
 #toast {
   position: fixed; bottom: 28px; left: 50%;
-  transform: translateX(-50%) translateY(16px);
-  background: #0d0d0d;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--sid);
   color: var(--accent);
   padding: 11px 20px;
   border-radius: 24px;
   font-size: 13px; font-weight: 700;
   z-index: 999;
   opacity: 0; pointer-events: none;
+  transition: opacity .22s, transform .22s;
   white-space: nowrap;
-  border: 1px solid rgba(245,200,0,.3);
-  box-shadow: 0 8px 32px rgba(0,0,0,.6), 0 0 20px rgba(245,200,0,.15);
+  border: 1px solid rgba(245,200,0,.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
   letter-spacing: .2px;
   font-family: var(--font);
 }
@@ -872,6 +839,7 @@ input:focus, select:focus, textarea:focus {
   padding: 16px 18px;
   margin-bottom: 12px;
   border-left: 4px solid var(--border2);
+  transition: transform .12s;
 }
 .g-card:active { transform: scale(.99); }
 .g-card.pagado    { border-left-color: var(--green); }
@@ -893,6 +861,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: var(--r);
   padding: 16px 18px;
   margin-bottom: 12px;
+  transition: box-shadow .15s;
 }
 .m-card:hover, .c-card:hover { box-shadow: var(--sh); }
 .m-card-top     { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -920,6 +889,7 @@ input:focus, select:focus, textarea:focus {
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   opacity: 0; pointer-events: none;
+  transition: opacity .2s;
 }
 #confirm-overlay.open { opacity: 1; pointer-events: all; }
 #confirm-box {
@@ -930,6 +900,14 @@ input:focus, select:focus, textarea:focus {
   box-shadow: var(--sh-md);
   text-align: center;
   border: 1px solid var(--border);
+}
+#confirm-overlay.open #confirm-box {
+  animation: bounceIn .3s cubic-bezier(.34,1.5,.64,1) both;
+}
+@keyframes bounceIn {
+  from { opacity: 0; transform: scale(.7); }
+  60%  { transform: scale(1.06); }
+  to   { opacity: 1; transform: scale(1); }
 }
 #confirm-icon { font-size: 34px; margin-bottom: 12px; }
 #confirm-msg  { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
@@ -958,6 +936,8 @@ input:focus, select:focus, textarea:focus {
   .kpi-value { font-size: 22px; }
   .modal { border-radius: 18px 18px 0 0; position: fixed; bottom: 0; left: 0; right: 0; max-width: 100%; max-height: 94vh; }
   .modal-overlay { align-items: flex-end; padding: 0; }
+  .modal-overlay.open .modal { animation: slideUpModal .25s cubic-bezier(.4,0,.2,1) both; }
+  @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .tabla-desktop { display: none !important; }
   .cards-mobile  { display: block !important; }
 }
@@ -1099,43 +1079,37 @@ input:focus, select:focus, textarea:focus {
 
 /* ─── LOGIN ──────────────────────────────────────────────── */
 #login-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 999;
+  position: fixed; inset: 0; z-index: 999;
   background: var(--sid);
-  display: none;
-  contain: strict;
-  /* Sin overflow — nada se mueve */
-  overflow: hidden;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px;
+  transition: opacity .4s, transform .4s;
 }
-.login-wrap {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  /* Altura fija — no cambia cuando sube el teclado */
-  padding: 40px 24px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* Sin justify-content:center — posición fija desde arriba */
-  gap: 0;
-  /* Capa GPU propia */
-  transform: translateZ(0);
-  will-change: auto;
+#login-screen.hiding {
+  opacity: 0; transform: scale(1.04); pointer-events: none;
 }
+#login-screen.hidden { display: none; }
+
 .login-logo {
-  width: 52px; height: 52px;
+  width: 72px; height: 72px;
   background: var(--accent);
-  border-radius: 14px;
+  border-radius: 20px;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 10px;
   animation: logoPulse 2.4s ease-in-out infinite;
 }
-.login-logo svg { width:28px; height:28px; fill:none; stroke:#1a1200; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+@keyframes logoIn {
+  from { opacity:0; transform:scale(.5) rotate(-15deg); }
+  to   { opacity:1; transform:scale(1) rotate(0); }
+}
+.login-logo svg { width:38px; height:38px; fill:none; stroke:#1a1200; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .login-brand {
-  text-align: center; margin-bottom: 18px;
+  text-align: center; margin-bottom: 32px;
+  animation: slideUp .4s .15s both;
 }
 .login-brand-name {
-  font-size: 20px; font-weight: 800;
+  font-size: 22px; font-weight: 800;
   color: var(--accent); letter-spacing: .5px;
   text-transform: uppercase;
 }
@@ -1147,15 +1121,16 @@ input:focus, select:focus, textarea:focus {
   background: var(--sid2);
   border: 1px solid rgba(245,200,0,.12);
   border-radius: var(--r-lg);
-  padding: 20px 18px 18px;
+  padding: 28px 24px;
   width: 100%; max-width: 360px;
+  animation: slideUp .4s .25s both;
 }
 .login-title {
   font-size: 15px; font-weight: 700;
   color: var(--sid-text); margin-bottom: 20px;
   text-align: center;
 }
-.login-field { margin-bottom: 12px; }
+.login-field { margin-bottom: 16px; }
 .login-field label {
   display: block;
   font-size: 10.5px; font-weight: 700;
@@ -1163,80 +1138,54 @@ input:focus, select:focus, textarea:focus {
   text-transform: uppercase; letter-spacing: .8px;
   margin-bottom: 6px;
 }
+.login-field input {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(255,255,255,.06);
+  border: 1.5px solid rgba(245,200,0,.15);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--sid-text);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-text-security: none;
+}
+.login-field input::placeholder { color: var(--sid-text2); }
+.login-field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(245,200,0,.15);
+  background: rgba(255,255,255,.09);
+}
 .login-err {
   font-size: 12px; color: #ff8080;
   text-align: center;
   min-height: 18px; margin-bottom: 12px;
   display: none;
 }
-.login-err.show { display: block; }
+.login-err.show { display: block; animation: slideUp .2s both; }
 .login-btn {
-  width: 100%; padding: 14px;
+  width: 100%; padding: 13px;
   background: var(--accent); color: #1a1200;
   border: none; border-radius: var(--r-sm);
-  font-size: 15px; font-weight: 800;
+  font-size: 14px; font-weight: 800;
   font-family: var(--font);
   letter-spacing: .4px; text-transform: uppercase;
   cursor: pointer;
-  /* Sin transition ni box-shadow — evitan repaints en Android */
-  outline: none;
+  transition: background .15s, transform .12s, box-shadow .15s;
+  box-shadow: 0 4px 16px rgba(245,200,0,.35);
 }
-.login-btn:active { opacity: .85; }
+.login-btn:hover { background: #f0c200; box-shadow: 0 6px 20px rgba(245,200,0,.5); transform: translateY(-1px); }
+.login-btn:active { transform: scale(.98); }
 .login-footer {
-  text-align: center; margin-top: 14px;
+  text-align: center; margin-top: 32px;
+  animation: slideUp .4s .35s both;
 }
 .login-footer-name {
   font-size: 11px; color: rgba(240,222,106,.35);
   letter-spacing: .3px;
 }
 .login-footer-name b { color: rgba(240,222,106,.55); font-weight: 600; }
-
-
-/* ─── DARK THEME POLISH ──────────────────────────────────── */
-
-/* Scrollbar oscuro */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #0d0d0d; }
-::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #383838; }
-
-/* Nav active con glow sutil */
-.nav-item.active {
-}
-
-/* Accent line en topbar más brillante */
-#topbar::before {
-  background: linear-gradient(90deg, var(--accent) 0%, rgba(245,200,0,.6) 60%, transparent 100%);
-}
-
-/* Modales con fondo más oscuro */
-.modal-overlay { background: rgba(0,0,0,.75); backdrop-filter: blur(4px); }
-.modal {
-  border: 1px solid var(--border);
-}
-
-/* Badge de alerta más visible en oscuro */
-.nav-badge { background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,.4); }
-
-/* Login page background */
-.login-wrap { background: radial-gradient(ellipse at 50% 0%, rgba(245,200,0,.06) 0%, #050505 60%); }
-
-/* Table header con fondo más diferenciado */
-th { background: #0d0d0d; }
-
-/* Placeholder color */
-input::placeholder, textarea::placeholder { color: var(--text3); }
-
-/* Smooth page transitions */
-
-/* Bordes de sección más sutiles */
-.card-header { background: linear-gradient(180deg, #161616 0%, #111111 100%); }
-
-/* KPI cards estilo dark más pronunciado */
-.kpi-card:hover { border-color: var(--border2); }
-
-/* Sidebar border derecho dorado sutil */
-#sidebar { border-right: 1px solid rgba(245,200,0,.08); }
 
 </style>
 </head>
@@ -1246,31 +1195,29 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
 
 <!-- ═══════ LOGIN SCREEN ═══════ -->
 <div id="login-screen">
-  <div class="login-wrap">
-    <div class="login-logo">
-      <svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M5 17V9l4-4h7l4 4v8"/><path d="M9 5v6h10"/></svg>
+  <div class="login-logo">
+    <svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M5 17V9l4-4h7l4 4v8"/><path d="M9 5v6h10"/></svg>
+  </div>
+  <div class="login-brand">
+    <div class="login-brand-name">TricimotoControl</div>
+    <div class="login-brand-sub">Panel de gestión</div>
+  </div>
+  <div class="login-card">
+    <div class="login-title">Iniciar sesión</div>
+    <div class="login-field">
+      <label>Usuario</label>
+      <input type="text" id="login-user" placeholder="Bendición de Dios" autocomplete="username" autocapitalize="none">
     </div>
-    <div class="login-brand">
-      <div class="login-brand-name">TricimotoControl</div>
-      <div class="login-brand-sub">Panel de gestión</div>
+    <div class="login-field">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter') doLogin()">
     </div>
-    <div class="login-card">
-      <div class="login-title">Iniciar sesión</div>
-      <div class="login-field">
-        <label>Usuario</label>
-        <input type="text" id="login-user" placeholder="Bendición de Dios" autocomplete="username" autocapitalize="none">
-      </div>
-      <div class="login-field">
-        <label>Contraseña</label>
-        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter') doLogin()">
-      </div>
-      <div class="login-err" id="login-err">Usuario o contraseña incorrectos</div>
-      <button class="login-btn" onclick="doLogin()">Entrar</button>
-    </div>
-    <div class="login-footer">
-      <div class="login-footer-name">Sistema desarrollado por <b>José Daniel Huacón</b></div>
-    </div>
+    <div class="login-err" id="login-err">Usuario o contraseña incorrectos</div>
+    <button class="login-btn" onclick="doLogin()">Entrar</button>
+  </div>
+  <div class="login-footer">
+    <div class="login-footer-name">Sistema desarrollado por <b>José Daniel Huacón</b></div>
   </div>
 </div>
 <!-- ════════════════════════════ -->
@@ -1289,16 +1236,16 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
   <nav>
     <div class="nav-section">
       <div class="nav-label">Principal</div>
-      <button class="nav-item active" data-page="dashboard" onclick="goTo('dashboard')">
+      <button class="nav-item active" onclick="goTo('dashboard')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         Dashboard
       </button>
-      <button class="nav-item" data-page="guardias" onclick="goTo('guardias')">
+      <button class="nav-item" onclick="goTo('guardias')">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         Guardias
         <span class="nav-badge" id="badge-pendientes">3</span>
       </button>
-      <button class="nav-item" data-page="alertas" onclick="goTo('alertas')">
+      <button class="nav-item" onclick="goTo('alertas')">
         <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         Alertas
         <span class="nav-badge" id="badge-alertas">5</span>
@@ -1306,30 +1253,30 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
     </div>
     <div class="nav-section">
       <div class="nav-label">Registros</div>
-      <button class="nav-item" data-page="tricimotos" onclick="goTo('tricimotos')">
+      <button class="nav-item" onclick="goTo('tricimotos')">
         <svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M5 17V9l4-4h7l4 4v8"/><path d="M9 5v6h10"/></svg>
         Tricimotos
       </button>
-      <button class="nav-item" data-page="tiendas" onclick="goTo('tiendas')">
+      <button class="nav-item" onclick="goTo('tiendas')">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Deuda tiendas
       </button>
-      <button class="nav-item" data-page="conductores" onclick="goTo('conductores')">
+      <button class="nav-item" onclick="goTo('conductores')">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Conductores
       </button>
-      <button class="nav-item" data-page="mantenimiento" onclick="goTo('mantenimiento')">
+      <button class="nav-item" onclick="goTo('mantenimiento')">
         <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
         Mantenimiento
       </button>
     </div>
     <div class="nav-section">
       <div class="nav-label">Análisis</div>
-      <button class="nav-item" data-page="reportes" onclick="goTo('reportes')">
+      <button class="nav-item" onclick="goTo('reportes')">
         <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         Reportes
       </button>
-      <button class="nav-item" data-page="configuracion" onclick="goTo('configuracion')">
+      <button class="nav-item" onclick="goTo('configuracion')">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M21 12h-1M4 12H3M12 21v-1M12 4V3"/></svg>
         Configuración
       </button>
@@ -1356,7 +1303,7 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
       border:1px solid rgba(192,57,43,.3);
       border-radius:var(--r-sm);
       color:#ff8080;
-      cursor:pointer;
+      cursor:pointer;transition:background .15s;
     " onmouseover="this.style.background='rgba(192,57,43,.3)'"
        onmouseout="this.style.background='rgba(192,57,43,.15)'">
       <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">
@@ -1453,13 +1400,6 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
         <button class="tab" onclick="setGuardiaTab('fecha',this)">Por fecha</button>
         <button class="tab" onclick="setGuardiaTab('calendario',this)">📅 Cal.</button>
         <button class="tab" onclick="setGuardiaTab('todos',this)">Historial</button>
-      </div>
-      <!-- Selector de fecha — solo visible en tab "Por fecha" -->
-      <div id="guardia-fecha-nav" style="display:none;padding:12px 16px;background:var(--surface);border-bottom:1px solid var(--border);display:none;align-items:center;gap:8px">
-        <button class="btn btn-secondary btn-sm" onclick="cambiarFechaGuardia(-1)">‹</button>
-        <input type="date" id="guardia-fecha-sel" style="flex:1;text-align:center" onchange="renderGuardias('fecha')">
-        <button class="btn btn-secondary btn-sm" onclick="cambiarFechaGuardia(1)">›</button>
-        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('guardia-fecha-sel').value=todayStr();renderGuardias('fecha')">Hoy</button>
       </div>
       <div id="guardias-content"></div>
     </div>
@@ -1971,31 +1911,14 @@ let DB = {
   config: { tarifa: 15 }
 };
 
-function saveDB(){
-  try{
-    const data = JSON.stringify(DB);
-    // Verificar tamaño aproximado (localStorage max ~5MB)
-    if(data.length > 4 * 1024 * 1024){
-      showToast('⚠️ Base de datos muy grande — considera exportar y limpiar historial');
-    }
-    localStorage.setItem('tricimoto_db', data);
-    invalidateCache(); // Maps stale after any write
-  }catch(e){
-    showToast('⚠️ Error al guardar — almacenamiento lleno. Exporta un backup.');
-  }
-}
+function saveDB(){ try{ localStorage.setItem('tricimoto_db', JSON.stringify(DB)) }catch(e){} }
 function loadDB(){
   try{
     const d = localStorage.getItem('tricimoto_db');
-    if(d){
-      DB = JSON.parse(d);
-      if(!DB.pagosTienda) DB.pagosTienda=[];
-      if(!DB.diasDescanso) DB.diasDescanso=['Domingo'];
-      if(!DB.config) DB.config={tarifa:15};
-    }
+    if(d) DB = JSON.parse(d);
   }catch(e){}
 }
-function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,10) }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6) }
 
 // =====================
 // SEED DATA
@@ -2016,7 +1939,8 @@ function seedData(){
     {id:m4, placa:'TRI-004', numero:'M-04', modelo:'Lifan', color:'Blanco', tarifa:15, estado:'mantenimiento', conductor:c4},
   ];
   // Solo registros de hoy como base limpia — sin deudas artificiales
-  const fs = todayStr();
+  const hoy = new Date();
+  const fs = hoy.toISOString().slice(0,10);
   const guardias = [];
   DB.tricimotos.filter(m=>m.estado==='activa').forEach(m=>{
     guardias.push({id:uid(),motoId:m.id,conductorId:m.conductor,fecha:fs,esperado:m.tarifa,entregado:m.tarifa,estado:'pagado',obs:'Dato inicial'});
@@ -2031,62 +1955,10 @@ function seedData(){
 }
 
 // =====================
-// CACHE INDICES O(1)
-// =====================
-let _motoMap = null, _conductorMap = null, _guardiasByFecha = null, _guardiasByMoto = null, _guardiasByConductor = null;
-
-function invalidateCache(){
-  _motoMap = null; _conductorMap = null;
-  _guardiasByFecha = null; _guardiasByMoto = null; _guardiasByConductor = null;
-}
-
-function getMotoMap(){
-  if(!_motoMap){ _motoMap = new Map(DB.tricimotos.map(m=>[m.id,m])); }
-  return _motoMap;
-}
-function getConductorMap(){
-  if(!_conductorMap){ _conductorMap = new Map(DB.conductores.map(c=>[c.id,c])); }
-  return _conductorMap;
-}
-// Guardias agrupadas por fecha (string YYYY-MM-DD)
-function getGuardiasByFecha(){
-  if(!_guardiasByFecha){
-    _guardiasByFecha = new Map();
-    for(const g of DB.guardias){
-      if(!_guardiasByFecha.has(g.fecha)) _guardiasByFecha.set(g.fecha,[]);
-      _guardiasByFecha.get(g.fecha).push(g);
-    }
-  }
-  return _guardiasByFecha;
-}
-// Guardias agrupadas por motoId
-function getGuardiasByMoto(){
-  if(!_guardiasByMoto){
-    _guardiasByMoto = new Map();
-    for(const g of DB.guardias){
-      if(!_guardiasByMoto.has(g.motoId)) _guardiasByMoto.set(g.motoId,[]);
-      _guardiasByMoto.get(g.motoId).push(g);
-    }
-  }
-  return _guardiasByMoto;
-}
-// Guardias agrupadas por conductorId
-function getGuardiasByConductor(){
-  if(!_guardiasByConductor){
-    _guardiasByConductor = new Map();
-    for(const g of DB.guardias){
-      if(!_guardiasByConductor.has(g.conductorId)) _guardiasByConductor.set(g.conductorId,[]);
-      _guardiasByConductor.get(g.conductorId).push(g);
-    }
-  }
-  return _guardiasByConductor;
-}
-
-// =====================
 // HELPERS
 // =====================
-function getMoto(id){ return getMotoMap().get(id)||{placa:'?',numero:'?',color:'',modelo:''} }
-function getConductor(id){ return getConductorMap().get(id)||{nombres:'Sin asignar'} }
+function getMoto(id){ return DB.tricimotos.find(m=>m.id===id)||{placa:'?',numero:'?',color:'',modelo:''} }
+function getConductor(id){ return DB.conductores.find(c=>c.id===id)||{nombres:'Sin asignar'} }
 function fmtFecha(s){ if(!s)return'—'; const p=s.split('-'); return `${p[2]}/${p[1]}/${p[0]}` }
 function fmtMoney(n){ return'$'+Number(n||0).toFixed(2) }
 function dateStr(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0') }
@@ -2136,11 +2008,8 @@ function badgePago(e){
 }
 
 function deudaConductor(conductorId){
-  const gs = getGuardiasByConductor().get(conductorId)||[];
-  return gs.reduce((s,g)=>{
-    if(g.estado!=='no_pago'&&g.estado!=='incompleto') return s;
-    return s+Math.max(0,(parseFloat(g.esperado)||0)-(parseFloat(g.entregado)||0));
-  },0);
+  return DB.guardias.filter(g=>g.conductorId===conductorId&&(g.estado==='no_pago'||g.estado==='incompleto'))
+    .reduce((s,g)=>s+(g.esperado-g.entregado),0);
 }
 
 // =====================
@@ -2159,7 +2028,7 @@ const pageActions = {
 
 let currentPage = 'dashboard';
 function goTo(page){
-  if(page===currentPage) return;
+  if(page===currentPage) return; // no-op if already on this page
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const pg=document.getElementById('page-'+page);
@@ -2224,7 +2093,13 @@ function renderPage(page){
 // =====================
 function renderDashboard(){
   const hoy = todayStr();
+  const guardHoy = DB.guardias.filter(g=>g.fecha===hoy);
+  const cobradoHoy = guardHoy.reduce((s,g)=>s+g.entregado,0);
+  const activas = DB.tricimotos.filter(m=>m.estado==='activa').length;
+  const deudaTotal = DB.guardias.filter(g=>g.estado==='no_pago'||g.estado==='incompleto').reduce((s,g)=>s+(g.esperado-g.entregado),0);
+  const conductoresConDeuda = new Set(DB.guardias.filter(g=>g.estado==='no_pago'||g.estado==='incompleto').map(g=>g.conductorId)).size;
   const mesStr = hoy.slice(0,7);
+  const mesCobrado = DB.guardias.filter(g=>g.fecha.startsWith(mesStr)).reduce((s,g)=>s+g.entregado,0);
 
   // ── UN SOLO LOOP sobre DB.guardias para todos los KPIs ──────────────
   const byFecha = getGuardiasByFecha();
@@ -2272,39 +2147,43 @@ function renderDashboard(){
     el.style.animation=`kpiIn .22s cubic-bezier(.4,0,.2,1) ${i*0.06}s both`;
   });
 
-  const opts={weekday:'long',day:'numeric',month:'long',year:'numeric'};
-  document.getElementById('fecha-hoy-label').textContent = hoyD.toLocaleDateString('es-EC',opts);
+  const fd = new Date(); const opts={weekday:'long',day:'numeric',month:'long',year:'numeric'};
+  document.getElementById('fecha-hoy-label').textContent = fd.toLocaleDateString('es-EC',opts);
 
-  // ── Cards guardia hoy — DocumentFragment ────────────────────────────
+  // Cards de guardia hoy — incluye motos sin registrar como "pendientes"
   const cont = document.getElementById('dashboard-guardia-cards');
+  const motosActivas = DB.tricimotos.filter(m=>m.estado==='activa');
+  const yaRegistradas = guardHoy.map(g=>g.motoId);
+
   if(!DB.tricimotos.length){
+    // Onboarding: no hay ninguna moto
     cont.innerHTML=`<div style="text-align:center;padding:28px 16px">
       <div style="font-size:40px;margin-bottom:12px">🏍️</div>
       <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px">Empecemos</div>
       <div style="font-size:13px;color:var(--text2);margin-bottom:18px">Registra tu primera tricimoto para comenzar a controlar las guardias</div>
       <button class="btn btn-primary" onclick="goTo('tricimotos');openModal('modal-moto',true)">+ Registrar primera moto</button>
     </div>`;
-  } else if(!guardHoy.length && !activas.length){
+  } else if(!guardHoy.length && !motosActivas.length) {
     cont.innerHTML=`<div style="text-align:center;padding:24px 16px;color:var(--text3)">
       <div style="font-size:32px;margin-bottom:8px">📋</div>
       <div style="font-size:14px;font-weight:600;color:var(--text2)">Sin motos activas hoy</div>
     </div>`;
   } else {
-    const registradasSet = new Set(guardHoy.map(g=>g.motoId));
-    const clsMap = {pagado:'pagado',incompleto:'pendiente',no_pago:'no-pago',descanso:'descanso'};
+    // Motos con guardia registrada
     let html = guardHoy.map(g=>{
       const m=getMoto(g.motoId), c=getConductor(g.conductorId);
-      const cls = clsMap[g.estado]||'pendiente';
+      const cls={'pagado':'pagado','incompleto':'pendiente','no_pago':'no-pago','descanso':'descanso'}[g.estado]||'pendiente';
       return `<div class="guardia-card ${cls}">
-        <div class="gc-header"><div><div class="gc-moto">${m.numero} · ${m.placa}</div><div class="gc-conductor">${shortName(c.nombres)}</div></div>${badgePago(g.estado)}</div>
+        <div class="gc-header"><div><div class="gc-moto">${m.numero} · ${m.placa}</div><div class="gc-conductor">${c.nombres.split(' ').slice(0,2).join(' ')}</div></div>${badgePago(g.estado)}</div>
         <div class="gc-monto">${fmtMoney(g.entregado)}</div>
         <div class="gc-esperado">Esperado: ${fmtMoney(g.esperado)}</div>
       </div>`;
     }).join('');
-    activas.filter(m=>!registradasSet.has(m.id)).forEach(m=>{
+    // Motos activas SIN guardia hoy → mostrar como pendientes
+    motosActivas.filter(m=>!yaRegistradas.includes(m.id)).forEach(m=>{
       const c=getConductor(m.conductor);
       html+=`<div class="guardia-card pendiente" style="opacity:.75;cursor:pointer" onclick="openModal('modal-guardia',true)">
-        <div class="gc-header"><div><div class="gc-moto">${m.numero} · ${m.placa}</div><div class="gc-conductor">${shortName(c.nombres)}</div></div><span class="badge badge-amber">Pendiente</span></div>
+        <div class="gc-header"><div><div class="gc-moto">${m.numero} · ${m.placa}</div><div class="gc-conductor">${c.nombres.split(' ').slice(0,2).join(' ')}</div></div><span class="badge badge-amber">Pendiente</span></div>
         <div class="gc-monto" style="color:var(--text3)">—</div>
         <div class="gc-esperado">Toca para registrar</div>
       </div>`;
@@ -2317,17 +2196,20 @@ function renderDashboard(){
     });
   }
 
-  // ── Alertas (usa cache getGuardiasByConductor) ───────────────────────
+  // Alertas
   const alertCont = document.getElementById('dashboard-alertas');
   const alertas = getAlertas();
-  alertCont.innerHTML = alertas.length
-    ? alertas.slice(0,4).map(a=>`<div class="alert alert-${a.tipo}"><span class="alert-icon">${a.ico}</span><div>${a.msg}</div></div>`).join('')
-    : '<div style="font-size:13px;color:var(--text3);padding:8px 0">✅ Sin alertas pendientes</div>';
+  if(!alertas.length){ alertCont.innerHTML='<div style="font-size:13px;color:var(--text3);padding:8px 0">✅ Sin alertas pendientes</div>'; }
+  else { alertCont.innerHTML = alertas.slice(0,4).map(a=>`<div class="alert alert-${a.tipo}"><span class="alert-icon">${a.ico}</span><div>${a.msg}</div></div>`).join(''); }
 
-  // ── Chart 7 días — ya calculado en el loop principal ────────────────
-  const maxV = Math.max(...vals7, 1);
+  // Chart 7 días
+  const chart = document.getElementById('chart-7dias');
+  const dias=[]; const hoyD=new Date();
+  for(let i=6;i>=0;i--){ const d=new Date(hoyD); d.setDate(d.getDate()-i); dias.push(d.toISOString().slice(0,10)); }
+  const vals = dias.map(f=>DB.guardias.filter(g=>g.fecha===f).reduce((s,g)=>s+g.entregado,0));
+  const maxV = Math.max(...vals,1);
   const diasNom = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  document.getElementById('chart-7dias').innerHTML = vals7.map((v,i)=>{
+  chart.innerHTML = vals.map((v,i)=>{
     const pct = Math.round((v/maxV)*88)+4;
     const dn = diasNom[new Date(dias7[i]+'T12:00:00').getDay()];
     const delay = (i*0.06).toFixed(2);
@@ -2354,24 +2236,17 @@ function setGuardiaTab(tab,el){
   renderGuardias(tab);
 }
 
-function cambiarFechaGuardia(dias){
-  const sel=document.getElementById('guardia-fecha-sel');
-  if(!sel.value) sel.value=todayStr();
-  const d=new Date(sel.value+'T12:00:00');
-  d.setDate(d.getDate()+dias);
-  sel.value=dateStr(d);
-  renderGuardias('fecha');
-}
-
 // ── helpers para tarjeta de moto ────────────────────────────────────────────
 function _cardPago(g, m, c){
-  const pend = Math.max(0, g.esperado - g.entregado);
-  const tieneDeuda = (g.estado==='incompleto'||g.estado==='no_pago') && pend>0;
+  // Tarjeta de guardia YA REGISTRADA
+  const pend = g.esperado - g.entregado;
+  const tieneDeuda = g.estado==='incompleto'||g.estado==='no_pago';
+  const borderColor = g.estado==='pagado'?'var(--green)':g.estado==='incompleto'?'var(--accent)':g.estado==='no_pago'?'var(--red)':'var(--border2)';
   return `<div class="g-card ${g.estado}" id="gcard-${g.id}">
     <div class="g-card-top">
       <div>
         <div class="g-card-id">${m.numero} · ${m.placa}</div>
-        <div class="g-card-fecha">${shortName(c.nombres)} · ${fmtFecha(g.fecha)}</div>
+        <div class="g-card-fecha">${c.nombres.split(' ').slice(0,2).join(' ')} · ${fmtFecha(g.fecha)}</div>
       </div>
       ${badgePago(g.estado)}
     </div>
@@ -2380,7 +2255,7 @@ function _cardPago(g, m, c){
         <div class="g-card-entregado">${fmtMoney(g.entregado)}</div>
         <div class="g-card-esperado">de ${fmtMoney(g.esperado)}</div>
       </div>
-      ${tieneDeuda?`<div class="g-card-pendiente">Debe: ${fmtMoney(pend)}</div>`:''}
+      ${pend>0?`<div class="g-card-pendiente">Debe: ${fmtMoney(pend)}</div>`:''}
     </div>
     ${g.obs?`<div style="font-size:11px;color:var(--text3);margin-bottom:4px">${g.obs}</div>`:''}
     <div class="g-card-actions">
@@ -2391,50 +2266,13 @@ function _cardPago(g, m, c){
   </div>`;
 }
 
-function _cardPendienteFecha(m, c, fecha){
-  return `<div class="g-card" style="border-left-color:var(--border2)">
-    <div class="g-card-top">
-      <div>
-        <div class="g-card-id">${m.numero} · ${m.placa}</div>
-        <div class="g-card-fecha">${shortName(c.nombres)} · tarifa ${fmtMoney(m.tarifa)}/día</div>
-      </div>
-      <span class="badge badge-gray">Sin registrar</span>
-    </div>
-    <div class="g-card-acciones" style="margin-top:10px">
-      <button class="btn btn-primary btn-sm" style="flex:1;justify-content:center"
-        onclick="abrirPagoRapidoFecha('${m.id}','${fecha}')">
-        + Registrar pago
-      </button>
-    </div>
-  </div>`;
-}
-
-function abrirPagoRapidoFecha(motoId, fecha){
-  const m=getMoto(motoId); if(!m) return;
-  // Primero poblar selects (necesario para poder asignar valores)
-  poblarSelectMotos('g-moto');
-  poblarSelectConductores('g-conductor');
-  // Luego asignar valores
-  document.getElementById('g-moto').value=motoId;
-  document.getElementById('g-fecha').value=fecha;
-  document.getElementById('g-conductor').value=m.conductor||'';
-  document.getElementById('g-esperado').value=m.tarifa||0;
-  document.getElementById('g-entregado').value=m.tarifa||0;
-  document.getElementById('g-estado').value='pagado';
-  document.getElementById('g-obs').value='';
-  document.getElementById('modal-guardia').querySelector('.modal-title').textContent=
-    `Pago — ${m.numero} · ${fmtFecha(fecha)}`;
-  // Abrir sin limpiar (isNew=false para no resetear lo que acabamos de poner)
-  document.getElementById('modal-guardia').classList.add('open');
-}
-
 function _cardPendiente(m, c){
   // Tarjeta de moto SIN guardia hoy — botón de registrar pago directo
   return `<div class="g-card" style="border-left-color:var(--border2)" id="gcard-pend-${m.id}">
     <div class="g-card-top">
       <div>
         <div class="g-card-id">${m.numero} · ${m.placa}</div>
-        <div class="g-card-fecha">${shortName(c.nombres)} · tarifa ${fmtMoney(m.tarifa)}/día</div>
+        <div class="g-card-fecha">${c.nombres.split(' ').slice(0,2).join(' ')} · tarifa ${fmtMoney(m.tarifa)}/día</div>
       </div>
       <span class="badge badge-gray">Sin registrar</span>
     </div>
@@ -2510,7 +2348,7 @@ function renderGuardias(tab){
 
     // Cobrado hoy
     const guardHoy = DB.guardias.filter(g=>g.fecha===hoy);
-    const cobradoHoy = guardHoy.reduce((s,g)=>s+(parseFloat(g.entregado)||0),0);
+    const cobradoHoy = guardHoy.reduce((s,g)=>s+g.entregado,0);
     const esperadoHoy = DB.tricimotos.filter(m=>m.estado==='activa').reduce((s,m)=>s+m.tarifa,0);
     const pct = esperadoHoy>0?Math.round(cobradoHoy/esperadoHoy*100):0;
 
@@ -2558,7 +2396,7 @@ function renderGuardias(tab){
   let lista=[];
   if(tab==='semana'){
     const lim=new Date(); lim.setDate(lim.getDate()-6);
-    lista=DB.guardias.filter(g=>g.fecha>=dateStr(lim));
+    lista=DB.guardias.filter(g=>g.fecha>=lim.toISOString().slice(0,10));
   }
   else if(tab==='pendientes') lista=DB.guardias.filter(g=>g.estado==='no_pago'||g.estado==='incompleto');
   else lista=[...DB.guardias].sort((a,b)=>b.fecha.localeCompare(a.fecha));
@@ -2584,7 +2422,7 @@ function renderGuardias(tab){
       return `<tr>
         <td style="font-family:'DM Mono',monospace;font-size:12px">${fmtFecha(g.fecha)}</td>
         <td><b>${m.numero}</b> <span style="color:var(--text3)">${m.placa}</span></td>
-        <td>${shortName(c.nombres)}</td>
+        <td>${c.nombres.split(' ').slice(0,2).join(' ')}</td>
         <td class="deuda-tag">${fmtMoney(g.esperado)}</td>
         <td class="deuda-tag">${fmtMoney(g.entregado)}</td>
         <td>${badgePago(g.estado)}</td>
@@ -2611,6 +2449,12 @@ function renderGuardias(tab){
   });
 }
 
+function eliminarGuardia(id){
+  DB.guardias=DB.guardias.filter(g=>g.id!==id);
+  saveDB(); renderGuardias(guardiaTab); renderDashboard(); updateBadges();
+  showToast('Guardia eliminada');
+}
+
 function abrirPagoRapido(motoId){
   // Abre modal de guardia con esa moto pre-seleccionada
   const m = getMoto(motoId); if(!m) return;
@@ -2635,7 +2479,7 @@ function abrirAbono(id){
     <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 14px">
       <span style="color:var(--text2)">Fecha:</span><b>${fmtFecha(g.fecha)}</b>
       <span style="color:var(--text2)">Moto:</span><b>${m.numero} · ${m.placa}</b>
-      <span style="color:var(--text2)">Conductor:</span><b>${shortName(c.nombres)}</b>
+      <span style="color:var(--text2)">Conductor:</span><b>${c.nombres.split(' ').slice(0,2).join(' ')}</b>
       <span style="color:var(--text2)">Pagado:</span><b style="color:var(--green)">${fmtMoney(g.entregado)}</b>
       <span style="color:var(--text2)">Pendiente:</span><b style="color:var(--red)">${fmtMoney(pend)}</b>
     </div>`;
@@ -2665,17 +2509,15 @@ function guardarAbono(){
   const g=DB.guardias[idx];
   const abono=parseFloat(document.getElementById('abono-monto').value)||0;
   if(abono<=0){showToast('Ingrese un monto mayor a 0');return;}
-  const pend=Math.max(0,(parseFloat(g.esperado)||0)-(parseFloat(g.entregado)||0));
-  if(abono>pend+0.005){showToast(`El abono ($${abono.toFixed(2)}) supera el pendiente ($${pend.toFixed(2)})`);return;}
-  const nuevoEntregado=Math.min(parseFloat(g.esperado)||0, (parseFloat(g.entregado)||0)+abono);
-  const estado=nuevoEntregado>=(parseFloat(g.esperado)||0)?'pagado':'incompleto';
+  const pend=g.esperado-g.entregado;
+  if(abono>pend+0.001){showToast('El abono supera el saldo pendiente');return;}
+  const nuevo=g.entregado+abono;
+  const estado=nuevo>=g.esperado?'pagado':'incompleto';
   const obsExtra=`Abono ${fmtMoney(abono)} el ${fmtFecha(todayStr())}${document.getElementById('abono-obs').value?' — '+document.getElementById('abono-obs').value:''}`;
-  DB.guardias[idx]={...g, entregado:nuevoEntregado, estado, obs:g.obs?g.obs+' | '+obsExtra:obsExtra};
+  DB.guardias[idx]={...g, entregado:nuevo, estado, obs:g.obs?g.obs+' | '+obsExtra:obsExtra};
   saveDB(); closeModal('modal-abono');
-  if(currentPage==='guardias') renderGuardias(guardiaTab);
-  if(currentPage==='dashboard') renderDashboard();
-  updateBadges();
-  showToast(estado==='pagado'?'✓ ¡Pago saldado por completo!':'Abono parcial registrado ✓');
+  renderGuardias(guardiaTab); renderDashboard(); updateBadges();
+  showToast(estado==='pagado'?'✓ ¡Pago saldado por completo!':'Pago parcial registrado ✓');
 }
 
 // =====================
@@ -2692,7 +2534,7 @@ function renderMotos(filter=''){
       <td style="font-weight:700;font-family:'DM Mono',monospace">${m.numero}</td>
       <td style="font-weight:500">${m.placa}</td>
       <td>${m.modelo||'—'} <span style="color:var(--text3)">· ${m.color||'—'}</span></td>
-      <td>${m.conductor?shortName(c.nombres):'<span style="color:var(--text3)">Sin asignar</span>'}</td>
+      <td>${m.conductor?c.nombres.split(' ').slice(0,2).join(' '):'<span style="color:var(--text3)">Sin asignar</span>'}</td>
       <td class="deuda-tag">${fmtMoney(m.tarifa)}/día</td>
       <td>${diasTag(m.diasLibres)}</td>
       <td>${badgeEstado(m.estado)}</td>
@@ -2714,7 +2556,7 @@ function renderMotos(filter=''){
         ${badgeEstado(m.estado)}
       </div>
       <div style="font-size:13px;color:var(--text2);margin-bottom:3px">${m.modelo||'—'} · ${m.color||'—'}</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:3px">Conductor: <b>${m.conductor?shortName(c.nombres):'Sin asignar'}</b></div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:3px">Conductor: <b>${m.conductor?c.nombres.split(' ').slice(0,2).join(' '):'Sin asignar'}</b></div>
       <div style="font-size:12px;color:var(--text2);margin-bottom:6px">Tarifa: <b>${fmtMoney(m.tarifa)}/día</b>${m.tienda?` · <b>${m.tienda}</b> día ${m.diaPago||'?'}`:''}</div>
       ${(m.diasLibres||[]).length?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${diasTag(m.diasLibres)}</div>`:''}
       <div class="m-card-actions">
@@ -2733,22 +2575,11 @@ function filterMotos(v){ renderMotos(v) }
 // =====================
 // TIENDAS
 // =====================
-function calcSaldoTienda(motoId){
-  // Saldo = deuda original - suma de todos los pagos registrados
-  const m=getMoto(motoId); if(!m||!m.tienda) return 0;
-  const totalPagado=(DB.pagosTienda||[]).filter(p=>p.motoId===motoId).reduce((s,p)=>s+(parseFloat(p.monto)||0),0);
-  const deudaOriginal=parseFloat(m.deudaOriginalTienda)||parseFloat(m.saldoTienda)||0;
-  // Si no hay deuda original registrada, usar el saldoTienda como está
-  if(!m.deudaOriginalTienda) return Math.max(0, parseFloat(m.saldoTienda)||0);
-  return Math.max(0, deudaOriginal - totalPagado);
-}
-
 function renderTiendas(){
   if(!DB.pagosTienda) DB.pagosTienda=[];
   const motosConTienda=DB.tricimotos.filter(m=>m.tienda);
-  // Calcular deuda total dinámicamente desde pagos reales
-  const totalDeuda=motosConTienda.reduce((s,m)=>s+calcSaldoTienda(m.id),0);
-  const totalPagado=DB.pagosTienda.reduce((s,p)=>s+(parseFloat(p.monto)||0),0);
+  const totalDeuda=DB.tricimotos.reduce((s,m)=>s+(parseFloat(m.saldoTienda)||0),0);
+  const totalPagado=DB.pagosTienda.reduce((s,p)=>s+p.monto,0);
   const hoyDia=new Date().getDate();
   const prox=DB.tricimotos.filter(m=>m.tienda&&m.diaPago).map(m=>({m,diff:parseInt(m.diaPago)-hoyDia})).filter(x=>x.diff>=0).sort((a,b)=>a.diff-b.diff)[0];
 
@@ -2760,7 +2591,7 @@ function renderTiendas(){
   // Tabla desktop
   const tablaHtml=`<table class="tabla-desktop"><thead><tr><th>Moto</th><th>Tienda</th><th>Cuota/mes</th><th>Día pago</th><th>Saldo</th><th>Obs.</th><th></th></tr></thead><tbody>`+
   DB.tricimotos.map(m=>{
-    const s=calcSaldoTienda(m.id);
+    const s=parseFloat(m.saldoTienda)||0;
     return `<tr>
       <td><b>${m.numero}</b> <span style="color:var(--text3)">${m.placa}</span></td>
       <td>${m.tienda||'<span style="color:var(--text3)">Sin configurar</span>'}</td>
@@ -2774,7 +2605,7 @@ function renderTiendas(){
 
   // Cards mobile
   const cardsHtml=DB.tricimotos.map(m=>{
-    const s=calcSaldoTienda(m.id);
+    const s=parseFloat(m.saldoTienda)||0;
     return `<div class="m-card">
       <div class="m-card-top"><div style="display:flex;gap:8px;align-items:center"><span class="m-card-num">${m.numero}</span><b>${m.placa}</b></div></div>
       <div style="font-size:13px;color:var(--text2);margin-bottom:4px">Tienda: <b>${m.tienda||'Sin configurar'}</b></div>
@@ -2791,66 +2622,12 @@ function renderTiendas(){
   const hist=[...DB.pagosTienda].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   document.getElementById('tbody-pagos-tienda').innerHTML=hist.length?hist.map(p=>{
     const m=getMoto(p.motoId);
-    return `<tr>
-      <td style="font-size:12px;font-family:'DM Mono',monospace">${fmtFecha(p.fecha)}</td>
-      <td><b>${m.numero}</b></td>
-      <td>${p.tienda||'—'}</td>
-      <td class="deuda-tag" style="color:var(--green)">${fmtMoney(p.monto)}</td>
-      <td style="font-size:12px;color:var(--text3)">${p.obs||'—'}</td>
-      <td><div class="table-actions">
-        <button class="btn btn-secondary btn-sm" data-action="editar-pago-tienda" data-id="${p.id}">Editar</button>
-        <button class="btn btn-danger btn-sm" data-action="eliminar-pago-tienda" data-id="${p.id}">✕</button>
-      </div></td>
-    </tr>`;
-  }).join(''):`<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:24px">Sin pagos registrados</td></tr>`;
+    return `<tr><td style="font-size:12px;font-family:'DM Mono',monospace">${fmtFecha(p.fecha)}</td><td><b>${m.numero}</b></td><td>${p.tienda||'—'}</td><td class="deuda-tag" style="color:var(--green)">${fmtMoney(p.monto)}</td><td style="font-size:12px;color:var(--text3)">${p.obs||'—'}</td></tr>`;
+  }).join(''):`<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:24px">Sin pagos registrados</td></tr>`;
   document.getElementById('tienda-pagos-cards').innerHTML=hist.length?hist.map(p=>{
     const m=getMoto(p.motoId);
-    return `<div class="m-card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div><b>${m.numero}</b> · ${p.tienda||'—'}</div>
-        <b style="color:var(--green)">${fmtMoney(p.monto)}</b>
-      </div>
-      <div style="font-size:11px;color:var(--text3);margin-top:4px">${fmtFecha(p.fecha)}${p.obs?' · '+p.obs:''}</div>
-      <div class="m-card-actions" style="margin-top:8px">
-        <button class="btn btn-secondary btn-sm" style="flex:1" data-action="editar-pago-tienda" data-id="${p.id}">Editar</button>
-        <button class="btn btn-danger btn-sm" style="flex:1" data-action="eliminar-pago-tienda" data-id="${p.id}">Eliminar</button>
-      </div>
-    </div>`;
+    return `<div class="m-card"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>${m.numero}</b> · ${p.tienda||'—'}</div><b style="color:var(--green)">${fmtMoney(p.monto)}</b></div><div style="font-size:11px;color:var(--text3);margin-top:4px">${fmtFecha(p.fecha)}${p.obs?' · '+p.obs:''}</div></div>`;
   }).join(''):`<div style="padding:20px;text-align:center;color:var(--text3)">Sin pagos registrados</div>`;
-}
-
-function editarPagoTienda(id){
-  const p=DB.pagosTienda.find(x=>x.id===id); if(!p) return;
-  const m=getMoto(p.motoId);
-  document.getElementById('pt-moto').value=p.motoId;
-  document.getElementById('pt-fecha').value=p.fecha;
-  document.getElementById('pt-monto').value=p.monto;
-  document.getElementById('pt-obs').value=p.obs||'';
-  document.getElementById('pt-tienda-nombre').value=p.tienda||'';
-  const info=document.getElementById('pt-info');
-  info.innerHTML=`<b>${p.tienda||'—'}</b> · Saldo actual: <b style="color:var(--red)">${fmtMoney(calcSaldoTienda(m.id))}</b>`;
-  info.style.display='block';
-  document.getElementById('modal-tienda').dataset.editId=id;
-  document.getElementById('modal-tienda').querySelector('.modal-title').textContent='Editar pago a tienda';
-  openModal('modal-tienda',false);
-}
-
-function eliminarPagoTienda(id){
-  const p=DB.pagosTienda.find(x=>x.id===id); if(!p) return;
-  const m=getMoto(p.motoId);
-  pedirConfirmacion(
-    '¿Eliminar este pago?',
-    `${m.numero} · ${p.tienda||''} — ${fmtFecha(p.fecha)} — ${fmtMoney(p.monto)}`,
-    '💸',
-    ()=>{
-      // Revertir el descuento del saldo
-      const idx=DB.tricimotos.findIndex(t=>t.id===p.motoId);
-      if(idx>=0) DB.tricimotos[idx].saldoTienda=(parseFloat(DB.tricimotos[idx].saldoTienda)||0)+p.monto;
-      DB.pagosTienda=DB.pagosTienda.filter(x=>x.id!==id);
-      saveDB(); renderTiendas();
-      showToast('Pago eliminado ✓');
-    }
-  );
 }
 
 function abrirConfigTienda(motoId){
@@ -2868,16 +2645,11 @@ function abrirConfigTienda(motoId){
 function guardarConfigTienda(){
   const motoId=document.getElementById('modal-config-tienda').dataset.editId; if(!motoId)return;
   const idx=DB.tricimotos.findIndex(m=>m.id===motoId); if(idx<0)return;
-  const nuevoSaldo=parseFloat(document.getElementById('ct-saldo').value)||0;
   DB.tricimotos[idx].tienda=document.getElementById('ct-tienda').value.trim();
   DB.tricimotos[idx].cuota=parseFloat(document.getElementById('ct-cuota').value)||0;
   DB.tricimotos[idx].diaPago=document.getElementById('ct-dia-pago').value;
+  DB.tricimotos[idx].saldoTienda=parseFloat(document.getElementById('ct-saldo').value)||0;
   DB.tricimotos[idx].tiendaObs=document.getElementById('ct-obs').value.trim();
-  // Guardar como deuda original para que calcSaldoTienda funcione correctamente
-  // Solo actualizar deudaOriginalTienda si cambió el saldo configurado
-  const totalPagadoActual=(DB.pagosTienda||[]).filter(p=>p.motoId===motoId).reduce((s,p)=>s+(parseFloat(p.monto)||0),0);
-  DB.tricimotos[idx].deudaOriginalTienda=nuevoSaldo+totalPagadoActual;
-  DB.tricimotos[idx].saldoTienda=nuevoSaldo; // mantener como campo legacy
   saveDB(); closeModal('modal-config-tienda'); renderTiendas(); updateBadges();
   showToast('Financiamiento guardado ✓');
 }
@@ -2890,7 +2662,7 @@ function actualizarInfoTienda(){
   document.getElementById('pt-tienda-nombre').value=m.tienda||'';
   if(m.tienda){
     document.getElementById('pt-monto').value=m.cuota||'';
-    info.innerHTML=`<b>${m.tienda}</b> · Cuota: ${fmtMoney(m.cuota||0)} · Saldo: <b style="color:var(--red)">${fmtMoney(calcSaldoTienda(m.id))}</b> · Pago día ${m.diaPago||'—'}`;
+    info.innerHTML=`<b>${m.tienda}</b> · Cuota: ${fmtMoney(m.cuota||0)} · Saldo: <b style="color:var(--red)">${fmtMoney(m.saldoTienda||0)}</b> · Pago día ${m.diaPago||'—'}`;
     info.style.display='block';
   } else info.style.display='none';
 }
@@ -2902,27 +2674,10 @@ function guardarPagoTienda(){
   if(!motoId||!fecha||!monto){showToast('Complete moto, fecha y monto');return;}
   const m=getMoto(motoId);
   if(!DB.pagosTienda) DB.pagosTienda=[];
-  const editId=document.getElementById('modal-tienda').dataset.editId;
-  if(editId){
-    // Modo edición — revertir monto anterior, aplicar nuevo
-    const idx=DB.pagosTienda.findIndex(x=>x.id===editId);
-    if(idx>=0){
-      const montoAnterior=DB.pagosTienda[idx].monto;
-      const idxMoto=DB.tricimotos.findIndex(t=>t.id===motoId);
-      if(idxMoto>=0) DB.tricimotos[idxMoto].saldoTienda=Math.max(0,(parseFloat(DB.tricimotos[idxMoto].saldoTienda)||0)+montoAnterior-monto);
-      DB.pagosTienda[idx]={...DB.pagosTienda[idx],fecha,monto,obs:document.getElementById('pt-obs').value.trim()};
-    }
-    delete document.getElementById('modal-tienda').dataset.editId;
-    document.getElementById('modal-tienda').querySelector('.modal-title').textContent='Registrar pago a tienda';
-    showToast('Pago actualizado ✓');
-  } else {
-    // Modo creación
-    DB.pagosTienda.push({id:uid(),motoId,fecha,monto,tienda:m.tienda||document.getElementById('pt-tienda-nombre').value,obs:document.getElementById('pt-obs').value.trim()});
-    const idx=DB.tricimotos.findIndex(t=>t.id===motoId);
-    if(idx>=0) DB.tricimotos[idx].saldoTienda=Math.max(0,(parseFloat(DB.tricimotos[idx].saldoTienda)||0)-monto);
-    showToast('Pago registrado ✓');
-  }
-  saveDB(); closeModal('modal-tienda'); renderTiendas();
+  DB.pagosTienda.push({id:uid(),motoId,fecha,monto,tienda:m.tienda||document.getElementById('pt-tienda-nombre').value,obs:document.getElementById('pt-obs').value.trim()});
+  const idx=DB.tricimotos.findIndex(t=>t.id===motoId);
+  if(idx>=0) DB.tricimotos[idx].saldoTienda=Math.max(0,(parseFloat(DB.tricimotos[idx].saldoTienda)||0)-monto);
+  saveDB(); closeModal('modal-tienda'); renderTiendas(); showToast('Pago registrado ✓');
 }
 
 
@@ -3050,18 +2805,15 @@ function renderMantenimiento(){
 // =====================
 function getAlertas(){
   const alertas=[];
-  const byC = getGuardiasByConductor();
+  // Conductores con deuda > 1 día
   DB.conductores.forEach(c=>{
-    const gs = byC.get(c.id)||[];
-    let deuda=0, diasMora=0;
-    for(const g of gs){
-      if(g.estado==='no_pago'||g.estado==='incompleto'){
-        deuda += Math.max(0,(parseFloat(g.esperado)||0)-(parseFloat(g.entregado)||0));
-        diasMora++;
-      }
+    const deuda=deudaConductor(c.id);
+    if(deuda>0){
+      const dias=DB.guardias.filter(g=>g.conductorId===c.id&&(g.estado==='no_pago'||g.estado==='incompleto')).length;
+      alertas.push({tipo:'red',ico:'⚠️',msg:`<b>${c.nombres.split(' ').slice(0,2).join(' ')}</b> — deuda de ${fmtMoney(deuda)} (${dias} guardia${dias>1?'s':''})`});
     }
-    if(deuda>0) alertas.push({tipo:'red',ico:'⚠️',msg:`<b>${shortName(c.nombres)}</b> — deuda de ${fmtMoney(deuda)} (${diasMora} guardia${diasMora>1?'s':''})`});
   });
+  // Motos en mantenimiento
   DB.tricimotos.filter(m=>m.estado==='mantenimiento').forEach(m=>{
     alertas.push({tipo:'amber',ico:'🔧',msg:`Tricimoto <b>${m.numero} (${m.placa})</b> en mantenimiento`});
   });
@@ -3101,46 +2853,35 @@ function setReporteTab(tab,el){
 function renderReportes(tab){
   const cont=document.getElementById('reportes-content');
   if(tab==='resumen'){
-    const hoyD=new Date();
+    // Ingresos por semana últimas 5
+    const hoy=new Date();
+    let html=`<div class="kpi-grid" style="margin-bottom:20px">`;
     const hoyStr=todayStr();
     const mesStr=hoyStr.slice(0,7);
+    const totalHoy=DB.guardias.filter(g=>g.fecha===hoyStr).reduce((s,g)=>s+g.entregado,0);
+    const totalMes=DB.guardias.filter(g=>g.fecha.startsWith(mesStr)).reduce((s,g)=>s+g.entregado,0);
+    const totalGuardias=DB.guardias.length;
+    const deudaTotal=DB.guardias.filter(g=>g.estado==='no_pago'||g.estado==='incompleto').reduce((s,g)=>s+(g.esperado-g.entregado),0);
+    html+=`<div class="kpi-card"><div class="kpi-label">Hoy</div><div class="kpi-value">${fmtMoney(totalHoy)}</div></div>`;
+    html+=`<div class="kpi-card"><div class="kpi-label">Este mes</div><div class="kpi-value">${fmtMoney(totalMes)}</div></div>`;
+    html+=`<div class="kpi-card"><div class="kpi-label">Total guardias</div><div class="kpi-value">${totalGuardias}</div></div>`;
+    html+=`<div class="kpi-card"><div class="kpi-label">Deuda pendiente</div><div class="kpi-value kpi-down">${fmtMoney(deudaTotal)}</div></div>`;
+    html+=`</div>`;
 
-    // Construir ventanas de 5 semanas (fecha ini/fin como strings para comparar)
-    const semanas=[];
+    // Semanas como cards — sin scroll horizontal
+    html+=`<div class="card"><div class="card-header"><div class="card-title">Ingresos por semana</div></div><div style="padding:4px 0">`;
     for(let w=0;w<5;w++){
-      const ini=new Date(hoyD); ini.setDate(ini.getDate()-(w*7+6));
-      const fin=new Date(hoyD); fin.setDate(fin.getDate()-w*7);
-      semanas.push({iniS:dateStr(ini), finS:dateStr(fin), cob:0, esp:0});
-    }
-
-    // UN SOLO LOOP para KPIs + semanas
-    let totalHoy=0, totalMes=0, deudaTotal=0;
-    for(const g of DB.guardias){
-      const ent=parseFloat(g.entregado)||0;
-      const esp=parseFloat(g.esperado)||0;
-      if(g.fecha===hoyStr) totalHoy+=ent;
-      if(g.fecha.startsWith(mesStr)) totalMes+=ent;
-      if(g.estado==='no_pago'||g.estado==='incompleto') deudaTotal+=Math.max(0,esp-ent);
-      if(g.estado!=='descanso'){
-        for(const s of semanas){
-          if(g.fecha>=s.iniS&&g.fecha<=s.finS){ s.cob+=ent; s.esp+=esp; break; }
-        }
-      }
-    }
-
-    let html=`<div class="kpi-grid" style="margin-bottom:20px">
-      <div class="kpi-card"><div class="kpi-label">Hoy</div><div class="kpi-value">${fmtMoney(totalHoy)}</div></div>
-      <div class="kpi-card"><div class="kpi-label">Este mes</div><div class="kpi-value">${fmtMoney(totalMes)}</div></div>
-      <div class="kpi-card"><div class="kpi-label">Total guardias</div><div class="kpi-value">${DB.guardias.length}</div></div>
-      <div class="kpi-card"><div class="kpi-label">Deuda pendiente</div><div class="kpi-value kpi-down">${fmtMoney(deudaTotal)}</div></div>
-    </div><div class="card"><div class="card-header"><div class="card-title">Ingresos por semana</div></div><div style="padding:4px 0">`;
-
-    semanas.forEach(s=>{
-      const deu=s.esp-s.cob; const pct=s.esp>0?Math.round(s.cob/s.esp*100):0;
+      const ini=new Date(hoy); ini.setDate(ini.getDate()-(w*7+6));
+      const fin=new Date(hoy); fin.setDate(fin.getDate()-w*7);
+      const iniS=ini.toISOString().slice(0,10), finS=fin.toISOString().slice(0,10);
+      const semGuard=DB.guardias.filter(g=>g.fecha>=iniS&&g.fecha<=finS&&g.estado!=='descanso');
+      const cob=semGuard.reduce((s,g)=>s+g.entregado,0);
+      const esp=semGuard.reduce((s,g)=>s+g.esperado,0);
+      const deu=esp-cob; const pct=esp>0?Math.round(cob/esp*100):0;
       const color=pct>=90?'var(--green)':pct>=70?'var(--accent)':'var(--red)';
       html+=`<div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px">
         <div style="flex:1;min-width:0">
-          <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px">${fmtFecha(s.iniS)} – ${fmtFecha(s.finS)}</div>
+          <div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px">${fmtFecha(iniS)} – ${fmtFecha(finS)}</div>
           <div style="display:flex;align-items:center;gap:8px">
             <div class="progress" style="flex:1;height:7px"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
             <span style="font-size:13px;font-family:'DM Mono',monospace;font-weight:700;color:${color};min-width:36px">${pct}%</span>
@@ -3149,34 +2890,28 @@ function renderReportes(tab){
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;text-align:right;flex-shrink:0">
           <div style="font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Cobrado</div>
           <div style="font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Deuda</div>
-          <div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green)">${fmtMoney(s.cob)}</div>
+          <div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:var(--green)">${fmtMoney(cob)}</div>
           <div style="font-size:14px;font-weight:700;font-family:'DM Mono',monospace;color:${deu>0?'var(--red)':'var(--green)'}">${fmtMoney(deu)}</div>
         </div>
       </div>`;
-    });
+    }
     html+=`</div></div>`;
     cont.innerHTML=html;
   }
   else if(tab==='conductor'){
-    // Usar cache — O(1) por conductor
-    const byC=getGuardiasByConductor();
     let html=`<div class="card"><div class="card-header"><div class="card-title">Resumen por conductor</div></div><div style="padding:4px 0">`;
     if(!DB.conductores.length) html+=`<div style="padding:32px;text-align:center;color:var(--text3)">Sin conductores registrados</div>`;
     DB.conductores.forEach(c=>{
-      const gs=(byC.get(c.id)||[]).filter(g=>g.estado!=='descanso');
-      let cob=0,deuda=0,pagados=0;
-      for(const g of gs){
-        const ent=parseFloat(g.entregado)||0, esp=parseFloat(g.esperado)||0;
-        cob+=ent;
-        if(g.estado==='pagado') pagados++;
-        else deuda+=Math.max(0,esp-ent);
-      }
-      const pct=gs.length>0?Math.round(pagados/gs.length*100):0;
+      const guard=DB.guardias.filter(g=>g.conductorId===c.id&&g.estado!=='descanso');
+      const cob=guard.reduce((s,g)=>s+g.entregado,0);
+      const deuda=deudaConductor(c.id);
+      const pagados=guard.filter(g=>g.estado==='pagado').length;
+      const pct=guard.length>0?Math.round(pagados/guard.length*100):0;
       const color=pct>=90?'var(--green)':pct>=70?'var(--accent)':'var(--red)';
       html+=`<div style="padding:14px 20px;border-bottom:1px solid var(--border)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <div style="font-weight:700;font-size:14px">${shortName(c.nombres)}</div>
-          <span style="font-size:11px;color:var(--text3)">${gs.length} guardias</span>
+          <div style="font-weight:700;font-size:14px">${c.nombres.split(' ').slice(0,2).join(' ')}</div>
+          <span style="font-size:11px;color:var(--text3)">${guard.length} guardias</span>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
           <div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Cobrado</div><div style="font-family:'DM Mono',monospace;font-weight:700;font-size:13px;color:var(--green)">${fmtMoney(cob)}</div></div>
@@ -3190,17 +2925,12 @@ function renderReportes(tab){
     cont.innerHTML=html;
   }
   else {
-    // Tab moto — usar cache getGuardiasByMoto
-    const byM=getGuardiasByMoto();
     let html=`<div class="card"><div class="card-header"><div class="card-title">Resumen por tricimoto</div></div><div style="padding:4px 0">`;
     if(!DB.tricimotos.length) html+=`<div style="padding:32px;text-align:center;color:var(--text3)">Sin tricimotos registradas</div>`;
     DB.tricimotos.forEach(m=>{
-      const gs=(byM.get(m.id)||[]).filter(g=>g.estado!=='descanso');
-      let cob=0,deu=0;
-      for(const g of gs){
-        const ent=parseFloat(g.entregado)||0, esp=parseFloat(g.esperado)||0;
-        cob+=ent; deu+=Math.max(0,esp-ent);
-      }
+      const guard=DB.guardias.filter(g=>g.motoId===m.id&&g.estado!=='descanso');
+      const cob=guard.reduce((s,g)=>s+g.entregado,0);
+      const deu=guard.reduce((s,g)=>s+(g.esperado-g.entregado),0);
       const cond=getConductor(m.conductor);
       html+=`<div style="padding:14px 20px;border-bottom:1px solid var(--border)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -3208,13 +2938,13 @@ function renderReportes(tab){
             <span style="background:var(--accent);color:#1a1200;font-family:'DM Mono',monospace;font-weight:800;font-size:12px;padding:4px 10px;border-radius:6px">${m.numero}</span>
             <div>
               <div style="font-weight:700;font-size:13px">${m.placa}</div>
-              <div style="font-size:11px;color:var(--text3)">${m.conductor?shortName(cond.nombres):'Sin asignar'}</div>
+              <div style="font-size:11px;color:var(--text3)">${m.conductor?cond.nombres.split(' ').slice(0,2).join(' '):'Sin asignar'}</div>
             </div>
           </div>
           ${badgeEstado(m.estado)}
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-          <div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Guardias</div><div style="font-family:'DM Mono',monospace;font-weight:700;font-size:13px">${gs.length}</div></div>
+          <div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Guardias</div><div style="font-family:'DM Mono',monospace;font-weight:700;font-size:13px">${guard.length}</div></div>
           <div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Cobrado</div><div style="font-family:'DM Mono',monospace;font-weight:700;font-size:13px;color:var(--green)">${fmtMoney(cob)}</div></div>
           <div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">Deuda</div><div style="font-family:'DM Mono',monospace;font-weight:700;font-size:13px;color:${deu>0?'var(--red)':'var(--green)'}">${fmtMoney(deu)}</div></div>
         </div>
@@ -3279,9 +3009,7 @@ function guardarMoto(){
   };
   const idx=DB.tricimotos.findIndex(m=>m.id===id);
   if(idx>=0) DB.tricimotos[idx]=obj; else DB.tricimotos.push(obj);
-  saveDB();closeModal('modal-moto');renderMotos();
-  if(currentPage==='dashboard') renderDashboard();
-  updateBadges();
+  saveDB();closeModal('modal-moto');renderMotos();renderDashboard();updateBadges();
   showToast(idx>=0?'Tricimoto actualizada ✓':'Tricimoto guardada ✓');
 }
 function editarMoto(id){
@@ -3330,9 +3058,7 @@ function eliminarMoto(id){
     ()=>{
       DB.tricimotos=DB.tricimotos.filter(x=>x.id!==id);
       DB.guardias=DB.guardias.filter(g=>g.motoId!==id);
-      saveDB(); renderMotos();
-      if(currentPage==='dashboard') renderDashboard();
-      updateBadges();
+      saveDB(); renderMotos(); renderDashboard(); updateBadges();
       showToast('Tricimoto eliminada');
     }
   );
@@ -3341,15 +3067,13 @@ function eliminarMoto(id){
 function eliminarConductor(id){
   const c=getConductor(id);
   pedirConfirmacion(
-    `¿Eliminar a ${shortName(c.nombres)}?`,
+    `¿Eliminar a ${c.nombres.split(' ').slice(0,2).join(' ')}?`,
     'Se eliminarán sus registros de guardias.',
     '👤',
     ()=>{
       DB.conductores=DB.conductores.filter(x=>x.id!==id);
       DB.guardias=DB.guardias.filter(g=>g.conductorId!==id);
-      saveDB(); renderConductores();
-      if(currentPage==='dashboard') renderDashboard();
-      updateBadges();
+      saveDB(); renderConductores(); renderDashboard(); updateBadges();
       showToast('Conductor eliminado');
     }
   );
@@ -3468,12 +3192,8 @@ function guardarMantenimiento(){
 function openModal(id, isNew=true){
   const el=document.getElementById(id);
   if(isNew){
-    // Resetear inputs Y checkboxes cuando es un registro NUEVO
-    el.querySelectorAll('input,textarea').forEach(i=>{
-      if(i.type==='checkbox') i.checked=false;
-      else if(i.type!=='file') i.value='';
-    });
-    el.querySelectorAll('select').forEach(s=>{ if(s.id!=='moto-estado') s.selectedIndex=0; });
+    // Solo resetear cuando es un registro NUEVO, no cuando viene de editar
+    el.querySelectorAll('input,textarea').forEach(i=>{if(i.type!=='file')i.value=''});
     el.removeAttribute('data-edit-id');
     if(id==='modal-guardia'){
       document.getElementById('g-fecha').value=todayStr();
@@ -3525,7 +3245,7 @@ function poblarSelectMotos(selId){
 }
 function poblarSelectConductores(selId,val=''){
   const sel=document.getElementById(selId);
-  sel.innerHTML='<option value="">Sin asignar</option>'+DB.conductores.map(c=>`<option value="${c.id}"${c.id===val?' selected':''}>${shortName(c.nombres)}</option>`).join('');
+  sel.innerHTML='<option value="">Sin asignar</option>'+DB.conductores.map(c=>`<option value="${c.id}"${c.id===val?' selected':''}>${c.nombres.split(' ').slice(0,2).join(' ')}</option>`).join('');
 }
 function poblarDiasChecks(diasActivos){
   document.querySelectorAll('#moto-dias-checks input[type=checkbox]').forEach(cb=>{
@@ -3577,32 +3297,24 @@ function resetearDatos(){
 function exportarJSON(){
   const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`tricimoto-backup-${todayStr()}.json`; a.click(); URL.revokeObjectURL(a.href);
+  a.download=`tricimoto-backup-${todayStr()}.json`; a.click();
   showToast('Backup descargado ✓');
 }
 function exportarExcel(){
   const guardias=DB.guardias.map(g=>{
     const m=getMoto(g.motoId),c=getConductor(g.conductorId);
-    return [fmtFecha(g.fecha),m.numero,m.placa,c.nombres,g.esperado,g.entregado,g.estado,g.obs].map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(',');
+    return [fmtFecha(g.fecha),m.numero,m.placa,c.nombres,g.esperado,g.entregado,g.estado,g.obs].join(',');
   });
   const csv=['Fecha,Número,Placa,Conductor,Esperado,Entregado,Estado,Observaciones',...guardias].join('\n');
   const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`guardias-${todayStr()}.csv`; a.click(); URL.revokeObjectURL(a.href);
+  a.download=`guardias-${todayStr()}.csv`; a.click();
   showToast('CSV exportado ✓');
 }
 function restaurarJSON(input){
   const f=input.files[0]; if(!f)return;
   const r=new FileReader();
-  r.onload=e=>{ try{
-    const parsed=JSON.parse(e.target.result);
-    if(!parsed||typeof parsed!=='object'||Array.isArray(parsed)||!Array.isArray(parsed.tricimotos)||!Array.isArray(parsed.conductores)||!Array.isArray(parsed.guardias)){showToast('Archivo inválido — estructura incorrecta');return;}
-    DB=parsed;
-    if(!DB.pagosTienda) DB.pagosTienda=[];
-    if(!DB.diasDescanso) DB.diasDescanso=['Domingo'];
-    if(!DB.config) DB.config={tarifa:15};
-    saveDB(); renderPage(currentPage); showToast('Backup restaurado ✓');
-  }catch(err){showToast('Error al leer el archivo');} };
+  r.onload=e=>{ try{ DB=JSON.parse(e.target.result); saveDB(); renderPage(currentPage); showToast('Backup restaurado ✓'); }catch(err){showToast('Error al leer el archivo');} };
   r.readAsText(f);
 }
 
@@ -3823,21 +3535,8 @@ function showToast(msg){
   const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2800);
 }
-function toggleSidebar(){
-  const sb = document.getElementById('sidebar');
-  sb.style.willChange = 'transform';
-  sb.classList.toggle('open');
-  document.getElementById('overlay-bg').classList.toggle('open');
-  // Liberar will-change al terminar la transición
-  sb.addEventListener('transitionend', () => { sb.style.willChange = ''; }, { once: true });
-}
-function closeSidebar(){
-  const sb = document.getElementById('sidebar');
-  sb.style.willChange = 'transform';
-  sb.classList.remove('open');
-  document.getElementById('overlay-bg').classList.remove('open');
-  sb.addEventListener('transitionend', () => { sb.style.willChange = ''; }, { once: true });
-}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay-bg').classList.toggle('open'); }
+function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay-bg').classList.remove('open'); }
 
 // =====================
 // INIT
@@ -3850,51 +3549,39 @@ const LOGIN_USER     = 'Bendición de Dios';
 const LOGIN_PASS_KEY = 'tc_pass';
 const MASTER_KEY     = 'Bendición2024';
 const DEFAULT_PASS   = '12341234';
-const SESSION_KEY    = 'tc_session';
 
 function getLoginPass(){
   return localStorage.getItem(LOGIN_PASS_KEY) || DEFAULT_PASS;
 }
-function isLoggedIn(){
-  return localStorage.getItem(SESSION_KEY) === '1';
-}
-
-// Activa la sesión en CSS (muestra app, oculta login)
-function activarSesionCSS(){
-  document.documentElement.classList.remove('no-session');
-  document.documentElement.classList.add('has-session');
-}
-
-// Desactiva la sesión en CSS (oculta app, muestra login)
-function desactivarSesionCSS(){
-  document.documentElement.classList.remove('has-session');
-  document.documentElement.classList.add('no-session');
-}
 
 function cerrarSesion(){
-  localStorage.removeItem(SESSION_KEY);
-  desactivarSesionCSS();
+  // Mostrar login de nuevo
+  const ls = document.getElementById('login-screen');
+  ls.classList.remove('hidden','hiding');
+  ls.style.opacity = '0';
+  ls.style.transform = 'scale(1.04)';
+  // Limpiar campos
   document.getElementById('login-user').value = '';
   document.getElementById('login-pass').value = '';
   document.getElementById('login-err').classList.remove('show');
   closeSidebar();
+  // Animar entrada
+  requestAnimationFrame(()=>{
+    ls.style.transition = 'opacity .35s, transform .35s';
+    ls.style.opacity = '1';
+    ls.style.transform = 'scale(1)';
+  });
 }
 
 function doLogin(){
-  const u   = document.getElementById('login-user').value.trim();
-  const p   = document.getElementById('login-pass').value;
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
   const err = document.getElementById('login-err');
   if(u === LOGIN_USER && p === getLoginPass()){
     err.classList.remove('show');
-    localStorage.setItem(SESSION_KEY, '1');
-    activarSesionCSS();
-    // Inicializar el app
-    const d = new Date();
-    const opts = { weekday:'short', day:'numeric', month:'short', year:'numeric' };
-    document.getElementById('topbar-date').textContent = d.toLocaleDateString('es-EC', opts);
-    document.getElementById('topbar-action').style.display = 'none';
-    renderDashboard();
-    updateBadges();
+    const ls = document.getElementById('login-screen');
+    ls.classList.add('hiding');
+    setTimeout(()=>{ ls.classList.add('hidden'); }, 420);
   } else {
     err.classList.add('show');
     document.getElementById('login-pass').value = '';
@@ -3906,9 +3593,18 @@ function cambiarContrasena(){
   const master = document.getElementById('cp-master').value.trim();
   const nueva  = document.getElementById('cp-nueva').value.trim();
   const conf   = document.getElementById('cp-conf').value.trim();
-  if(master !== MASTER_KEY){ showToast('Clave maestra incorrecta'); return; }
-  if(nueva.length < 6){ showToast('La contraseña debe tener al menos 6 caracteres'); return; }
-  if(nueva !== conf){ showToast('Las contraseñas no coinciden'); return; }
+  if(master !== MASTER_KEY){
+    showToast('Clave maestra incorrecta');
+    return;
+  }
+  if(nueva.length < 6){
+    showToast('La contraseña debe tener al menos 6 caracteres');
+    return;
+  }
+  if(nueva !== conf){
+    showToast('Las contraseñas no coinciden');
+    return;
+  }
   localStorage.setItem(LOGIN_PASS_KEY, nueva);
   document.getElementById('cp-master').value = '';
   document.getElementById('cp-nueva').value  = '';
@@ -3916,11 +3612,18 @@ function cambiarContrasena(){
   showToast('✓ Contraseña actualizada');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded',()=>{
   loadDB();
-  if(!DB.tricimotos || !DB.tricimotos.length) seedData();
-  if(!DB.pagosTienda) DB.pagosTienda = [];
+  if(!DB.tricimotos||!DB.tricimotos.length) seedData();
+  if(!DB.pagosTienda) DB.pagosTienda=[];
+  // Set date
+  const d=new Date(); const opts={weekday:'short',day:'numeric',month:'short',year:'numeric'};
+  document.getElementById('topbar-date').textContent=d.toLocaleDateString('es-EC',opts);
+  document.getElementById('topbar-action').style.display='none';
+  renderDashboard();
+  updateBadges();
 
+  // ── Event delegation para botones generados dinámicamente ──
   document.getElementById('content').addEventListener('click', function(e){
     const btn = e.target.closest('[data-action]');
     if(!btn) return;
@@ -3940,14 +3643,6 @@ document.addEventListener('DOMContentLoaded', () => {
     else if(action === 'editar-pago-tienda')      editarPagoTienda(id);
     else if(action === 'eliminar-pago-tienda')    eliminarPagoTienda(id);
   });
-
-  // Iniciar app directo sin login
-  const d = new Date();
-  const opts = { weekday:'short', day:'numeric', month:'short', year:'numeric' };
-  document.getElementById('topbar-date').textContent = d.toLocaleDateString('es-EC', opts);
-  document.getElementById('topbar-action').style.display = 'none';
-  renderDashboard();
-  updateBadges();
 });
 
 
