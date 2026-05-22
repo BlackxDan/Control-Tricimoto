@@ -1206,12 +1206,24 @@ select { cursor: pointer; }
     <div class="login-title">Iniciar sesión</div>
     <div class="login-field">
       <label>Usuario</label>
-      <input type="text" id="login-user" placeholder="Bendición de Dios" autocomplete="username" autocapitalize="none">
+      <input type="text" id="login-user" value="Bendición de Dios" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false">
     </div>
     <div class="login-field">
       <label>Contraseña</label>
-      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"
-        onkeydown="if(event.key==='Enter') doLogin()">
+      <div style="position:relative">
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') doLogin()"
+          style="padding-right:44px;width:100%">
+        <button type="button" id="btn-ver-pass" onclick="toggleVerPass()" style="
+          position:absolute;right:0;top:0;bottom:0;
+          width:42px;display:flex;align-items:center;justify-content:center;
+          background:none;border:none;cursor:pointer;color:var(--text3);
+          border-radius:0 var(--r-sm) var(--r-sm) 0;
+        " title="Mostrar / ocultar contraseña">
+          <svg id="icon-ver" viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg id="icon-ocultar" viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
     </div>
     <div class="login-err" id="login-err">Usuario o contraseña incorrectos</div>
     <button class="login-btn" onclick="doLogin()">Entrar</button>
@@ -1236,36 +1248,36 @@ select { cursor: pointer; }
   <nav>
     <div class="nav-section">
       <div class="nav-label">Principal</div>
-      <button class="nav-item active" onclick="goTo('dashboard')">
+      <button class="nav-item active" data-page="dashboard" onclick="goTo('dashboard')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         Dashboard
       </button>
-      <button class="nav-item" onclick="goTo('guardias')">
+      <button class="nav-item" data-page="guardias" onclick="goTo('guardias')">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         Guardias
-        <span class="nav-badge" id="badge-pendientes">3</span>
+        <span class="nav-badge" id="badge-pendientes"></span>
       </button>
-      <button class="nav-item" onclick="goTo('alertas')">
+      <button class="nav-item" data-page="alertas" onclick="goTo('alertas')">
         <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         Alertas
-        <span class="nav-badge" id="badge-alertas">5</span>
+        <span class="nav-badge" id="badge-alertas"></span>
       </button>
     </div>
     <div class="nav-section">
       <div class="nav-label">Registros</div>
-      <button class="nav-item" onclick="goTo('tricimotos')">
+      <button class="nav-item" data-page="tricimotos" onclick="goTo('tricimotos')">
         <svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M5 17V9l4-4h7l4 4v8"/><path d="M9 5v6h10"/></svg>
         Tricimotos
       </button>
-      <button class="nav-item" onclick="goTo('tiendas')">
+      <button class="nav-item" data-page="tiendas" onclick="goTo('tiendas')">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Deuda tiendas
       </button>
-      <button class="nav-item" onclick="goTo('conductores')">
+      <button class="nav-item" data-page="conductores" onclick="goTo('conductores')">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         Conductores
       </button>
-      <button class="nav-item" onclick="goTo('mantenimiento')">
+      <button class="nav-item" data-page="mantenimiento" onclick="goTo('mantenimiento')">
         <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
         Mantenimiento
       </button>
@@ -3573,18 +3585,42 @@ function cerrarSesion(){
   });
 }
 
+function toggleVerPass(){
+  const inp = document.getElementById('login-pass');
+  const iconVer = document.getElementById('icon-ver');
+  const iconOcultar = document.getElementById('icon-ocultar');
+  const mostrar = inp.type === 'password';
+  inp.type = mostrar ? 'text' : 'password';
+  iconVer.style.display = mostrar ? 'none' : '';
+  iconOcultar.style.display = mostrar ? '' : 'none';
+  inp.focus();
+}
+
 function doLogin(){
-  const u = document.getElementById('login-user').value.trim();
+  const u = document.getElementById('login-user').value.trim().normalize('NFC');
   const p = document.getElementById('login-pass').value;
   const err = document.getElementById('login-err');
-  if(u === LOGIN_USER && p === getLoginPass()){
+  const loginOk = u === LOGIN_USER.normalize('NFC') && p === getLoginPass();
+  if(loginOk){
     err.classList.remove('show');
+    // Ocultar contraseña al entrar
+    document.getElementById('login-pass').type = 'password';
+    document.getElementById('icon-ver').style.display = '';
+    document.getElementById('icon-ocultar').style.display = 'none';
     const ls = document.getElementById('login-screen');
     ls.classList.add('hiding');
-    setTimeout(()=>{ ls.classList.add('hidden'); }, 420);
+    setTimeout(()=>{
+      ls.classList.add('hidden');
+      // Inicializar app si aún no está renderizada
+      renderDashboard();
+      updateBadges();
+    }, 420);
   } else {
     err.classList.add('show');
     document.getElementById('login-pass').value = '';
+    document.getElementById('login-pass').type = 'password';
+    document.getElementById('icon-ver').style.display = '';
+    document.getElementById('icon-ocultar').style.display = 'none';
     document.getElementById('login-pass').focus();
   }
 }
