@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=overlays-content">
+<meta name="theme-color" content="#f5c800">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TricimotoCtrl">
 <title>TricimotoControl · Bendición de Dios</title>
 <script>
   // Siempre mostrar login al abrir — nunca recordar sesión
@@ -397,7 +402,13 @@ nav::-webkit-scrollbar-thumb { background: rgba(245,200,0,.2); border-radius: 2p
   flex: 1;
   letter-spacing: -.1px;
   color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
+.topbar-search.visible ~ .topbar-title,
+.topbar-search.visible + .topbar-title { flex: 0 0 auto; }
 .topbar-date {
   font-size: 11.5px;
   color: var(--text3);
@@ -965,7 +976,126 @@ input:focus, select:focus, textarea:focus {
   .cards-mobile  { display: none; }
   .tabla-desktop { display: block; }
   #fab { display: none !important; }
+  #bottom-nav { display: none !important; }
 }
+
+/* ─── BOTTOM NAV (mobile only) ─────────────────────────────── */
+#bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 58px;
+  background: var(--sid);
+  border-top: 1px solid rgba(245,200,0,.14);
+  z-index: 95;
+  align-items: stretch;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  box-shadow: 0 -4px 16px rgba(0,0,0,.35);
+}
+.bn-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; border: none; background: none; color: rgba(245,200,0,.38);
+  font-size: 8.5px; font-family: var(--font); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .4px;
+  cursor: pointer; padding: 6px 2px; position: relative;
+  transition: color .12s;
+}
+.bn-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.bn-item.active { color: var(--accent); }
+.bn-item.active svg { stroke-width: 2.3; }
+.bn-badge {
+  position: absolute; top: 3px; right: calc(50% - 20px);
+  background: var(--red); color: #fff; font-size: 9px; font-weight: 800;
+  min-width: 16px; height: 16px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; padding: 0 3px;
+  line-height: 1;
+}
+@media (max-width: 768px) {
+  #bottom-nav { display: flex; }
+  #content { padding-bottom: 72px !important; }
+}
+
+/* ─── TOPBAR GLOBAL SEARCH ──────────────────────────────────── */
+.topbar-search {
+  flex: 1; max-width: 260px; position: relative; display: none; align-items: center;
+}
+.topbar-search.visible { display: flex; }
+#topbar-search-input {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm);
+  color: var(--text); font-size: 13px; font-family: var(--font);
+  padding: 6px 10px 6px 30px; width: 100%; outline: none;
+  transition: border-color .14s;
+}
+#topbar-search-input:focus { border-color: var(--accent); }
+.topbar-search-icon {
+  position: absolute; left: 8px; width: 13px; height: 13px;
+  stroke: var(--text3); fill: none; stroke-width: 2; stroke-linecap: round; pointer-events: none;
+}
+#search-results-panel {
+  position: fixed; top: calc(var(--top-h) + 6px); left: 50%; transform: translateX(-50%);
+  width: min(480px, 96vw); max-height: 60vh; overflow-y: auto;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); box-shadow: var(--sh-md); z-index: 300;
+  display: none;
+}
+#search-results-panel.open { display: block; animation: pageIn .18s both; }
+.sr-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .1s;
+}
+.sr-item:hover { background: var(--surface2); }
+.sr-item:last-child { border-bottom: none; }
+.sr-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+  padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
+.sr-tag-moto { background: var(--accent-dim); color: var(--accent); }
+.sr-tag-cond { background: var(--blue-bg); color: var(--blue-text); }
+
+/* ─── HISTORIAL DRAWER ──────────────────────────────────────── */
+#historial-drawer {
+  position: fixed; right: 0; top: 0; bottom: 0; width: 400px; max-width: 100vw;
+  background: var(--surface); border-left: 1px solid var(--border);
+  z-index: 250; transform: translateX(100%);
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+#historial-drawer.open { transform: translateX(0); }
+.hdrawer-header {
+  padding: 18px 20px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.hdrawer-title { font-size: 15px; font-weight: 700; }
+.hdrawer-close {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm);
+  cursor: pointer; font-size: 18px; color: var(--text2);
+}
+.hdrawer-body { flex: 1; overflow-y: auto; padding: 16px; }
+#drawer-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 249;
+  opacity: 0; pointer-events: none; transition: opacity .28s;
+}
+#drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+/* ─── CALENDARIO ─────────────────────────────────────────────── */
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; margin-top: 10px; }
+.cal-day-header { text-align: center; font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; padding: 4px 0; }
+.cal-cell { aspect-ratio: 1; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; transition: transform .12s; font-size: 10px; position: relative; }
+.cal-cell:hover { transform: scale(1.12); }
+.cal-cell .cal-num { font-size: 11px; font-weight: 700; }
+.cal-cell.empty { opacity: 0; pointer-events: none; }
+.cal-cell.today { outline: 2px solid var(--accent); }
+.cal-cell.nivel-0 { background: var(--surface2); color: var(--text3); }
+.cal-cell.nivel-1 { background: rgba(245,200,0,.15); color: var(--accent); }
+.cal-cell.nivel-2 { background: rgba(245,200,0,.3); color: var(--accent); }
+.cal-cell.nivel-3 { background: rgba(245,200,0,.55); color: #1a1200; }
+.cal-cell.nivel-4 { background: var(--accent); color: #1a1200; }
+.cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.cal-nav-title { font-size: 14px; font-weight: 700; }
+
+/* ─── SHARE BUTTON ───────────────────────────────────────────── */
+.btn-share { background: #25d366; color: #fff; border: none; border-radius: var(--r-sm); padding: 8px 14px; font-size: 13px; font-weight: 700; font-family: var(--font); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.btn-share svg { width: 15px; height: 15px; fill: currentColor; }
 
 /* ─── LOGIN ──────────────────────────────────────────────── */
 #login-screen {
@@ -1244,12 +1374,17 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
       <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-search" id="topbar-search-wrap">
+      <svg class="topbar-search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="topbar-search-input" placeholder="Buscar moto, conductor..." oninput="globalSearch(this.value)" autocomplete="off">
+    </div>
     <div class="topbar-date" id="topbar-date"></div>
     <button class="btn btn-primary" id="topbar-action" onclick="topbarAction()">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Nuevo
     </button>
   </header>
+  <div id="search-results-panel"></div>
 
   <main id="content">
 
@@ -1313,9 +1448,10 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
     <div id="page-guardias" class="page">
       <div class="tabs">
         <button class="tab active" onclick="setGuardiaTab('hoy',this)">Hoy</button>
-        <button class="tab" onclick="setGuardiaTab('semana',this)">Esta semana</button>
+        <button class="tab" onclick="setGuardiaTab('semana',this)">Semana</button>
         <button class="tab" onclick="setGuardiaTab('pendientes',this)">Pendientes</button>
         <button class="tab" onclick="setGuardiaTab('fecha',this)">Por fecha</button>
+        <button class="tab" onclick="setGuardiaTab('calendario',this)">📅 Cal.</button>
         <button class="tab" onclick="setGuardiaTab('todos',this)">Historial</button>
       </div>
       <!-- Selector de fecha — solo visible en tab "Por fecha" -->
@@ -1434,12 +1570,12 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
         <div class="card" style="margin-bottom:20px">
           <div class="card-header"><div class="card-title">Datos del negocio</div></div>
           <div style="padding:20px">
-            <div class="form-group"><label>Nombre del negocio</label><input type="text" value="TricimotoControl — Bendición de Dios"></div>
+            <div class="form-group"><label>Nombre del negocio</label><input type="text" id="cfg-nombre" placeholder="TricimotoControl — Bendición de Dios"></div>
             <div class="form-row">
-              <div class="form-group"><label>Tarifa diaria por defecto ($)</label><input type="number" value="15" id="cfg-tarifa"></div>
-              <div class="form-group"><label>Ciudad</label><input type="text" value="Guayaquil, Ecuador"></div>
+              <div class="form-group"><label>Tarifa diaria por defecto ($)</label><input type="number" id="cfg-tarifa" placeholder="15" step="0.01"></div>
+              <div class="form-group"><label>Ciudad</label><input type="text" id="cfg-ciudad" placeholder="Guayaquil, Ecuador"></div>
             </div>
-            <button class="btn btn-primary" onclick="showToast('Configuración guardada')">Guardar cambios</button>
+            <button class="btn btn-primary" onclick="guardarConfig()">Guardar cambios</button>
           </div>
         </div>
         <div class="card" style="margin-bottom:20px">
@@ -1759,6 +1895,68 @@ input::placeholder, textarea::placeholder { color: var(--text3); }
   </div>
 </div>
 
+<!-- BOTTOM NAV -->
+<nav id="bottom-nav">
+  <button class="bn-item active" data-bnpage="dashboard" onclick="goTo('dashboard')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Inicio
+  </button>
+  <button class="bn-item" data-bnpage="guardias" onclick="goTo('guardias')" style="position:relative">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    <span class="bn-badge" id="bn-badge-pend" style="display:none"></span>
+    Guardias
+  </button>
+  <button class="bn-item" data-bnpage="tricimotos" onclick="goTo('tricimotos')">
+    <svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="2"/><circle cx="19" cy="17" r="2"/><path d="M5 17V9l4-4h7l4 4v8"/><path d="M9 5v6h10"/></svg>
+    Motos
+  </button>
+  <button class="bn-item" data-bnpage="conductores" onclick="goTo('conductores')">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Conductores
+  </button>
+  <button class="bn-item" onclick="toggleMasSheet()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="19" r="1.5" fill="currentColor"/></svg>
+    Más
+  </button>
+</nav>
+
+<!-- MÁS SHEET (bottom-sheet móvil) -->
+<div id="mas-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:180;display:none" onclick="toggleMasSheet()"></div>
+<div id="mas-sheet" style="position:fixed;bottom:58px;left:0;right:0;background:var(--sid);border-radius:20px 20px 0 0;z-index:181;padding:12px 0 8px;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);border-top:1px solid rgba(245,200,0,.14)">
+  <div style="width:36px;height:3px;background:rgba(245,200,0,.3);border-radius:2px;margin:0 auto 14px"></div>
+  <button class="nav-item" style="margin:0 10px 2px;width:calc(100% - 20px)" onclick="goTo('tiendas');toggleMasSheet()">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Deuda tiendas
+  </button>
+  <button class="nav-item" style="margin:0 10px 2px;width:calc(100% - 20px)" onclick="goTo('mantenimiento');toggleMasSheet()">
+    <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    Mantenimiento
+  </button>
+  <button class="nav-item" style="margin:0 10px 2px;width:calc(100% - 20px)" onclick="goTo('alertas');toggleMasSheet()">
+    <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    Alertas
+    <span class="nav-badge" id="mas-badge-alertas"></span>
+  </button>
+  <button class="nav-item" style="margin:0 10px 2px;width:calc(100% - 20px)" onclick="goTo('reportes');toggleMasSheet()">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    Reportes
+  </button>
+  <button class="nav-item" style="margin:0 10px 8px;width:calc(100% - 20px)" onclick="goTo('configuracion');toggleMasSheet()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M21 12h-1M4 12H3M12 21v-1M12 4V3"/></svg>
+    Configuración
+  </button>
+</div>
+
+<!-- HISTORIAL DRAWER (por moto) -->
+<div id="drawer-overlay" onclick="cerrarHistorialDrawer()"></div>
+<div id="historial-drawer">
+  <div class="hdrawer-header">
+    <div class="hdrawer-title" id="hdrawer-title">Historial</div>
+    <button class="hdrawer-close" onclick="cerrarHistorialDrawer()">×</button>
+  </div>
+  <div class="hdrawer-body" id="hdrawer-body"></div>
+</div>
+
 <script>
 // =====================
 // DATA STORE
@@ -1967,14 +2165,27 @@ function goTo(page){
   const pg=document.getElementById('page-'+page);
   if(!pg) return;
   pg.classList.add('active');
-  // Activar nav item por data-page (robusto, no depende del string onclick)
   const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
   if(navItem) navItem.classList.add('active');
+  // Sync bottom nav
+  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
+  const bnItem = document.querySelector(`.bn-item[data-bnpage="${page}"]`);
+  if(bnItem) bnItem.classList.add('active');
   document.getElementById('topbar-title').textContent = pageTitles[page]||page;
   const act = pageActions[page]||'';
   const btn = document.getElementById('topbar-action');
   btn.style.display = act?'':'none';
   if(act) btn.childNodes[1].textContent = ' '+act;
+  // Show search on motos and conductores pages
+  const searchWrap = document.getElementById('topbar-search-wrap');
+  const titleEl = document.getElementById('topbar-title');
+  const showSearch = page==='tricimotos'||page==='conductores'||page==='mantenimiento';
+  searchWrap.classList.toggle('visible', showSearch);
+  titleEl.style.flex = showSearch ? '0 0 auto' : '1';
+  if(showSearch){
+    document.getElementById('topbar-search-input').value='';
+    document.getElementById('search-results-panel').classList.remove('open');
+  }
   currentPage = page;
   renderPage(page);
   closeSidebar();
@@ -2131,8 +2342,7 @@ let guardiaTab='hoy';
 function setGuardiaTab(tab,el){
   guardiaTab=tab;
   document.querySelectorAll('#page-guardias .tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  // Mostrar/ocultar selector de fecha
+  if(el) el.classList.add('active');
   const nav=document.getElementById('guardia-fecha-nav');
   if(tab==='fecha'){
     nav.style.display='flex';
@@ -2175,7 +2385,8 @@ function _cardPago(g, m, c){
     ${g.obs?`<div style="font-size:11px;color:var(--text3);margin-bottom:4px">${g.obs}</div>`:''}
     <div class="g-card-actions">
       ${tieneDeuda?`<button class="btn btn-success btn-sm" style="flex:1;justify-content:center" data-action="abonar-guardia" data-id="${g.id}">+ Abonar</button>`:''}
-      <button class="btn btn-danger btn-sm" style="${!tieneDeuda?'flex:1;justify-content:center':''}" data-action="eliminar-guardia" data-id="${g.id}">Eliminar</button>
+      <button class="btn btn-secondary btn-sm" data-action="editar-guardia" data-id="${g.id}">Editar</button>
+      <button class="btn btn-danger btn-sm" data-action="eliminar-guardia" data-id="${g.id}">✕</button>
     </div>
   </div>`;
 }
@@ -2247,6 +2458,9 @@ function renderGuardias(tab){
   const hoy=todayStr();
   const cont=document.getElementById('guardias-content');
 
+  // ── TAB CALENDARIO ───────────────────────────────────────────────────────
+  if(tab==='calendario'){ renderCalendario(); return; }
+
   // ── TAB FECHA: igual que HOY pero para la fecha elegida ──────────────────
   if(tab==='fecha'){
     const fechaSel=document.getElementById('guardia-fecha-sel').value||hoy;
@@ -2301,16 +2515,22 @@ function renderGuardias(tab){
     const pct = esperadoHoy>0?Math.round(cobradoHoy/esperadoHoy*100):0;
 
     // Resumen del día
-    let html = `<div style="background:var(--sid);border-radius:var(--r);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-      <div>
-        <div style="font-size:10px;font-weight:700;color:rgba(240,222,106,.5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">Cobrado hoy</div>
-        <div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--mono);letter-spacing:-1px">${fmtMoney(cobradoHoy)}</div>
-        <div style="font-size:11px;color:rgba(240,222,106,.5);margin-top:2px">de ${fmtMoney(esperadoHoy)} esperado</div>
+    let html = `<div style="background:var(--sid);border-radius:var(--r);padding:16px 20px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:rgba(240,222,106,.5);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">Cobrado hoy</div>
+          <div style="font-size:26px;font-weight:800;color:var(--accent);font-family:var(--mono);letter-spacing:-1px">${fmtMoney(cobradoHoy)}</div>
+          <div style="font-size:11px;color:rgba(240,222,106,.5);margin-top:2px">de ${fmtMoney(esperadoHoy)} esperado</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:28px;font-weight:800;color:${pct>=100?'var(--green)':pct>50?'var(--accent)':'rgba(240,222,106,.6)'};font-family:var(--mono)">${pct}%</div>
+          <div style="font-size:11px;color:rgba(240,222,106,.5)">${guardHoy.filter(g=>g.estado==='pagado').length} / ${DB.tricimotos.filter(m=>m.estado==='activa').length} motos pagadas</div>
+        </div>
       </div>
-      <div style="text-align:right">
-        <div style="font-size:28px;font-weight:800;color:${pct>=100?'var(--green)':pct>50?'var(--accent)':'rgba(240,222,106,.6)'};font-family:var(--mono)">${pct}%</div>
-        <div style="font-size:11px;color:rgba(240,222,106,.5)">${guardHoy.filter(g=>g.estado==='pagado').length} / ${DB.tricimotos.filter(m=>m.estado==='activa').length} motos pagadas</div>
-      </div>
+      <button class="btn-share" style="margin-top:12px;width:100%;justify-content:center" onclick="compartirResumen()">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.55 4.12 1.513 5.85L.057 23.776a.998.998 0 0 0 1.225 1.225l5.925-1.456A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+        Compartir resumen del día
+      </button>
     </div>`;
 
     // Una tarjeta por cada moto activa
@@ -2477,8 +2697,9 @@ function renderMotos(filter=''){
       <td>${diasTag(m.diasLibres)}</td>
       <td>${badgeEstado(m.estado)}</td>
       <td><div class="table-actions">
+        <button class="btn btn-secondary btn-sm" data-action="historial-moto" data-id="${m.id}">Historial</button>
         <button class="btn btn-secondary btn-sm" data-action="editar-moto" data-id="${m.id}">Editar</button>
-        <button class="btn btn-danger btn-sm" data-action="eliminar-moto" data-id="${m.id}">Eliminar</button>
+        <button class="btn btn-danger btn-sm" data-action="eliminar-moto" data-id="${m.id}">✕</button>
       </div></td>
     </tr>`;
   }).join('');
@@ -2497,8 +2718,9 @@ function renderMotos(filter=''){
       <div style="font-size:12px;color:var(--text2);margin-bottom:6px">Tarifa: <b>${fmtMoney(m.tarifa)}/día</b>${m.tienda?` · <b>${m.tienda}</b> día ${m.diaPago||'?'}`:''}</div>
       ${(m.diasLibres||[]).length?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px">${diasTag(m.diasLibres)}</div>`:''}
       <div class="m-card-actions">
+        <button class="btn btn-secondary btn-sm" style="flex:1" data-action="historial-moto" data-id="${m.id}">Historial</button>
         <button class="btn btn-secondary btn-sm" style="flex:1" data-action="editar-moto" data-id="${m.id}">Editar</button>
-        <button class="btn btn-danger btn-sm" data-action="eliminar-moto" data-id="${m.id}">Eliminar</button>
+        <button class="btn btn-danger btn-sm" data-action="eliminar-moto" data-id="${m.id}">✕</button>
       </div>
     </div>`;
   }).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">Sin tricimotos</div>`;
@@ -2843,6 +3065,19 @@ function getAlertas(){
   DB.tricimotos.filter(m=>m.estado==='mantenimiento').forEach(m=>{
     alertas.push({tipo:'amber',ico:'🔧',msg:`Tricimoto <b>${m.numero} (${m.placa})</b> en mantenimiento`});
   });
+  // ── Alerta cuotas tienda vencidas este mes ──────────────────────────
+  const hoyD=new Date();
+  const hoyDia=hoyD.getDate();
+  const mesStr=todayStr().slice(0,7);
+  DB.tricimotos.filter(m=>m.tienda&&m.diaPago&&m.cuota>0).forEach(m=>{
+    const diaPago=parseInt(m.diaPago)||0;
+    if(hoyDia>=diaPago){
+      const pagadoEsteMes=(DB.pagosTienda||[]).filter(p=>p.motoId===m.id&&p.fecha.startsWith(mesStr)).reduce((s,p)=>s+(parseFloat(p.monto)||0),0);
+      if(pagadoEsteMes<m.cuota*0.9){
+        alertas.push({tipo:'amber',ico:'🏪',msg:`Cuota de <b>${m.tienda}</b> (${m.numero}) vence día ${m.diaPago} — sin registrar este mes`});
+      }
+    }
+  });
   return alertas;
 }
 function renderAlertas(){
@@ -2994,6 +3229,13 @@ function renderReportes(tab){
 // CONFIGURACION
 // =====================
 function renderConfiguracion(){
+  // Poblar campos "Datos del negocio" con valores actuales de DB.config
+  const cfgN=document.getElementById('cfg-nombre');
+  const cfgT=document.getElementById('cfg-tarifa');
+  const cfgC=document.getElementById('cfg-ciudad');
+  if(cfgN) cfgN.value=DB.config.nombre||'TricimotoControl — Bendición de Dios';
+  if(cfgT) cfgT.value=DB.config.tarifa||15;
+  if(cfgC) cfgC.value=DB.config.ciudad||'Guayaquil, Ecuador';
   const list=document.getElementById('dias-descanso-list');
   list.innerHTML=DB.diasDescanso.map(d=>`<span class="badge badge-gray" style="gap:6px;padding:5px 10px;font-size:12px">${d} <span onclick="quitarDiaDescanso('${d}')" style="cursor:pointer;font-size:14px;line-height:1;margin-left:2px;opacity:.6">×</span></span>`).join('');
   // Estadísticas del backup
@@ -3155,36 +3397,61 @@ function editarConductor(id){
   openModal('modal-conductor', false);
 }
 
+function editarGuardia(id){
+  const g=DB.guardias.find(x=>x.id===id); if(!g)return;
+  poblarSelectMotos('g-moto');
+  poblarSelectConductores('g-conductor');
+  document.getElementById('g-moto').value=g.motoId;
+  document.getElementById('g-conductor').value=g.conductorId;
+  document.getElementById('g-fecha').value=g.fecha;
+  document.getElementById('g-esperado').value=g.esperado;
+  document.getElementById('g-entregado').value=g.entregado;
+  document.getElementById('g-estado').value=g.estado;
+  document.getElementById('g-obs').value=g.obs||'';
+  const modal=document.getElementById('modal-guardia');
+  modal.dataset.editId=id;
+  modal.querySelector('.modal-title').textContent='Editar guardia';
+  modal.querySelector('[onclick="guardarGuardia()"]').textContent='Actualizar';
+  modal.classList.add('open');
+}
+
 function guardarGuardia(){
   const motoId=document.getElementById('g-moto').value;
   const conductorId=document.getElementById('g-conductor').value;
   const fecha=document.getElementById('g-fecha').value;
   if(!motoId||!conductorId||!fecha){showToast('Complete los campos requeridos');return;}
-  // Bloquear duplicado: misma moto, mismo día (solo advertir, no bloquear fechas pasadas)
-  const hoyStr=todayStr();
-  const yaExiste=DB.guardias.find(g=>g.motoId===motoId&&g.fecha===fecha);
-  if(yaExiste&&fecha===hoyStr){showToast('⚠️ Ya existe un registro para esta moto hoy');return;}
-  if(yaExiste&&fecha!==hoyStr){
-    // Para fechas pasadas, confirmar sobreescritura no — simplemente permitir duplicado con aviso
-    showToast('ℹ️ Registro adicional para esta fecha guardado');
-  }
   const entregado=parseFloat(document.getElementById('g-entregado').value)||0;
   const esperado=parseFloat(document.getElementById('g-esperado').value)||0;
   if(esperado<=0){showToast('Ingrese un monto esperado mayor a 0');return;}
-  // Auto-calcular estado según montos
   let estadoAuto=document.getElementById('g-estado').value;
   if(entregado>=esperado) estadoAuto='pagado';
   else if(entregado>0) estadoAuto='incompleto';
   else if(estadoAuto!=='descanso') estadoAuto='no_pago';
-  const obj={id:uid(),motoId,conductorId,fecha,esperado,entregado,estado:estadoAuto,obs:document.getElementById('g-obs').value.trim()};
-  DB.guardias.push(obj);
+  const obs=document.getElementById('g-obs').value.trim();
+
+  const modal=document.getElementById('modal-guardia');
+  const editId=modal.dataset.editId;
+  if(editId){
+    const idx=DB.guardias.findIndex(x=>x.id===editId);
+    if(idx>=0) DB.guardias[idx]={...DB.guardias[idx],motoId,conductorId,fecha,esperado,entregado,estado:estadoAuto,obs};
+    delete modal.dataset.editId;
+    showToast('Guardia actualizada ✓');
+  } else {
+    const hoyStr=todayStr();
+    const yaExiste=DB.guardias.find(g=>g.motoId===motoId&&g.fecha===fecha);
+    if(yaExiste&&fecha===hoyStr){showToast('⚠️ Ya existe un registro para esta moto hoy');return;}
+    if(yaExiste&&fecha!==hoyStr) showToast('ℹ️ Registro adicional para esta fecha guardado');
+    DB.guardias.push({id:uid(),motoId,conductorId,fecha,esperado,entregado,estado:estadoAuto,obs});
+    showToast(estadoAuto==='pagado'?'✓ Pago completo registrado':estadoAuto==='incompleto'?'Pago parcial registrado':'Guardia registrada ✓');
+  }
+
   saveDB();
   closeModal('modal-guardia');
-  document.getElementById('modal-guardia').querySelector('.modal-title').textContent='Registrar pago de guardia';
+  modal.querySelector('.modal-title').textContent='Registrar pago de guardia';
+  modal.querySelector('[onclick="guardarGuardia()"]').textContent='Registrar pago';
   if(currentPage==='guardias') renderGuardias(guardiaTab);
   if(currentPage==='dashboard') renderDashboard();
   updateBadges();
-  showToast(estadoAuto==='pagado'?'✓ Pago completo registrado':estadoAuto==='incompleto'?'Pago parcial registrado':'Guardia registrada ✓');
 }
 
 function guardarMantenimiento(){
@@ -3340,10 +3607,204 @@ function restaurarJSON(input){
 }
 
 // =====================
+// GUARDAR CONFIGURACIÓN
+// =====================
+function guardarConfig(){
+  const tarifa=parseFloat(document.getElementById('cfg-tarifa').value)||DB.config.tarifa;
+  if(!DB.config) DB.config={tarifa:15};
+  DB.config.tarifa=tarifa;
+  DB.config.nombre=document.getElementById('cfg-nombre').value.trim()||DB.config.nombre||'TricimotoControl';
+  DB.config.ciudad=document.getElementById('cfg-ciudad').value.trim()||DB.config.ciudad||'Guayaquil';
+  saveDB();
+  showToast('✓ Configuración guardada');
+}
+
+// =====================
+// COMPARTIR RESUMEN (WhatsApp)
+// =====================
+function compartirResumen(){
+  const hoy=todayStr();
+  const guardHoy=DB.guardias.filter(g=>g.fecha===hoy);
+  const cobrado=guardHoy.reduce((s,g)=>s+(parseFloat(g.entregado)||0),0);
+  const esperado=DB.tricimotos.filter(m=>m.estado==='activa').reduce((s,m)=>s+m.tarifa,0);
+  const pagados=guardHoy.filter(g=>g.estado==='pagado').length;
+  const incompletos=guardHoy.filter(g=>g.estado==='incompleto').length;
+  const nopago=guardHoy.filter(g=>g.estado==='no_pago').length;
+  const opts={weekday:'long',day:'numeric',month:'long'};
+  const fechaFmt=new Date(hoy+'T12:00:00').toLocaleDateString('es-EC',opts);
+  const lineas=DB.tricimotos.filter(m=>m.estado==='activa').map(m=>{
+    const g=guardHoy.find(g=>g.motoId===m.id);
+    if(!g) return `• ${m.numero} (${m.placa}): ⏳ Sin registrar`;
+    const icon=g.estado==='pagado'?'✅':g.estado==='incompleto'?'⚠️':'❌';
+    return `• ${m.numero} (${m.placa}): ${icon} $${Number(g.entregado||0).toFixed(2)}${g.estado==='incompleto'?' (incompleto)':g.estado==='no_pago'?' (no pagó)':''}`;
+  });
+  const pct=esperado>0?Math.round(cobrado/esperado*100):0;
+  const texto=`🏍️ *RESUMEN DEL DÍA — ${fechaFmt.toUpperCase()}*\n\n`+
+    `💰 Cobrado: *$${cobrado.toFixed(2)}* de $${esperado.toFixed(2)} (${pct}%)\n`+
+    `✅ Pagados: ${pagados} | ⚠️ Incompletos: ${incompletos} | ❌ No pagaron: ${nopago}\n\n`+
+    `*DETALLE POR MOTO:*\n${lineas.join('\n')}\n\n`+
+    `_Generado por TricimotoControl_`;
+  if(navigator.share){
+    navigator.share({title:'Resumen del día',text:texto}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(texto).then(()=>showToast('Resumen copiado al portapapeles ✓')).catch(()=>{
+      const ta=document.createElement('textarea'); ta.value=texto;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); showToast('Resumen copiado ✓');
+    });
+  }
+}
+
+// =====================
+// GLOBAL SEARCH
+// =====================
+function globalSearch(q){
+  const panel=document.getElementById('search-results-panel');
+  if(!q||q.length<2){panel.classList.remove('open');
+    // Also filter the current page inline
+    if(currentPage==='tricimotos') filterMotos('');
+    if(currentPage==='conductores') filterConductores('');
+    return;
+  }
+  // Inline filter for current page
+  if(currentPage==='tricimotos') filterMotos(q);
+  if(currentPage==='conductores') filterConductores(q);
+  panel.classList.remove('open');
+}
+
+// =====================
+// MÁS SHEET (mobile)
+// =====================
+function toggleMasSheet(){
+  const sheet=document.getElementById('mas-sheet');
+  const overlay=document.getElementById('mas-overlay');
+  const isOpen=sheet.style.transform==='translateY(0%)';
+  sheet.style.transform=isOpen?'translateY(100%)':'translateY(0%)';
+  overlay.style.display=isOpen?'none':'block';
+}
+
+// =====================
+// HISTORIAL DRAWER (por moto)
+// =====================
+function abrirHistorialMoto(motoId){
+  const m=getMoto(motoId); if(!m)return;
+  const guardias=(getGuardiasByMoto().get(motoId)||[]).slice().sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const mantos=DB.mantenimiento.filter(x=>x.motoId===motoId).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  document.getElementById('hdrawer-title').textContent=`Historial — ${m.numero} · ${m.placa}`;
+  const totalCob=guardias.reduce((s,g)=>s+(parseFloat(g.entregado)||0),0);
+  const totalDeu=guardias.reduce((s,g)=>s+Math.max(0,(parseFloat(g.esperado)||0)-(parseFloat(g.entregado)||0)),0);
+  let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
+    <div style="background:var(--surface2);border-radius:var(--r-sm);padding:10px 12px">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">Cobrado total</div>
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:var(--green)">${fmtMoney(totalCob)}</div>
+    </div>
+    <div style="background:var(--surface2);border-radius:var(--r-sm);padding:10px 12px">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:4px">Deuda acumulada</div>
+      <div style="font-family:var(--mono);font-weight:700;font-size:16px;color:${totalDeu>0?'var(--red)':'var(--green)'}">${fmtMoney(totalDeu)}</div>
+    </div>
+  </div>`;
+  if(guardias.length){
+    html+=`<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin-bottom:8px">Guardias (${guardias.length})</div>`;
+    html+=guardias.slice(0,30).map(g=>{
+      const c=getConductor(g.conductorId);
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:12px;font-family:var(--mono);color:var(--text3)">${fmtFecha(g.fecha)}</div><div style="font-size:12px;color:var(--text2)">${shortName(c.nombres)}</div></div>
+        <div style="text-align:right">${badgePago(g.estado)}<div style="font-size:12px;font-family:var(--mono);font-weight:600;margin-top:3px">${fmtMoney(g.entregado)}</div></div>
+      </div>`;
+    }).join('');
+    if(guardias.length>30) html+=`<div style="font-size:11px;color:var(--text3);text-align:center;padding:8px">... y ${guardias.length-30} más</div>`;
+  }
+  if(mantos.length){
+    html+=`<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text3);margin:16px 0 8px">Mantenimientos (${mantos.length})</div>`;
+    html+=mantos.map(mt=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:12px;font-family:var(--mono);color:var(--text3)">${fmtFecha(mt.fecha)}</div><div style="font-size:12px">${mt.tipo}</div><div style="font-size:11px;color:var(--text3)">${mt.proveedor||''}</div></div>
+      <div style="font-family:var(--mono);font-weight:700;font-size:14px;color:var(--red)">${fmtMoney(mt.costo)}</div>
+    </div>`).join('');
+  }
+  document.getElementById('hdrawer-body').innerHTML=html;
+  document.getElementById('historial-drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+function cerrarHistorialDrawer(){
+  document.getElementById('historial-drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+
+// =====================
+// CALENDARIO DE GUARDIAS
+// =====================
+let calFecha = new Date();
+function renderCalendario(){
+  const cont=document.getElementById('guardias-content');
+  const year=calFecha.getFullYear(), month=calFecha.getMonth();
+  const mesStr=year+'-'+String(month+1).padStart(2,'0');
+  const guardiasMes=DB.guardias.filter(g=>g.fecha.startsWith(mesStr));
+  // Agrupar por fecha → suma cobrado
+  const porFecha=new Map();
+  const maxPosible=DB.tricimotos.filter(m=>m.estado==='activa').reduce((s,m)=>s+m.tarifa,0);
+  for(const g of guardiasMes){
+    porFecha.set(g.fecha,(porFecha.get(g.fecha)||0)+(parseFloat(g.entregado)||0));
+  }
+  const primerDia=new Date(year,month,1).getDay();
+  const diasMes=new Date(year,month+1,0).getDate();
+  const hoy=todayStr();
+  const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const dias=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  let html=`<div style="padding:16px">
+    <div class="cal-nav">
+      <button class="btn btn-secondary btn-sm" onclick="cambiarMesCal(-1)">‹</button>
+      <div class="cal-nav-title">${meses[month]} ${year}</div>
+      <button class="btn btn-secondary btn-sm" onclick="cambiarMesCal(1)">›</button>
+    </div>
+    <div class="cal-grid">`;
+  dias.forEach(d=>{ html+=`<div class="cal-day-header">${d}</div>`; });
+  for(let i=0;i<primerDia;i++) html+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=diasMes;d++){
+    const fStr=mesStr+'-'+String(d).padStart(2,'0');
+    const cobrado=porFecha.get(fStr)||0;
+    const nivel=maxPosible>0?Math.min(4,Math.ceil(cobrado/maxPosible*4)):0;
+    const isHoy=fStr===hoy;
+    html+=`<div class="cal-cell nivel-${nivel}${isHoy?' today':''}" onclick="irAFecha('${fStr}')" title="${fmtFecha(fStr)}: ${fmtMoney(cobrado)}">
+      <span class="cal-num">${d}</span>
+      ${cobrado>0?`<span style="font-size:8px">$${Math.round(cobrado)}</span>`:''}
+    </div>`;
+  }
+  html+=`</div>`;
+  // Leyenda
+  const totalMes=Array.from(porFecha.values()).reduce((s,v)=>s+v,0);
+  html+=`<div style="display:flex;align-items:center;gap:6px;margin-top:12px;font-size:11px;color:var(--text3)">
+    <span>Menos</span>
+    <div style="width:12px;height:12px;border-radius:3px;background:var(--surface2)"></div>
+    <div style="width:12px;height:12px;border-radius:3px;background:rgba(245,200,0,.15)"></div>
+    <div style="width:12px;height:12px;border-radius:3px;background:rgba(245,200,0,.3)"></div>
+    <div style="width:12px;height:12px;border-radius:3px;background:rgba(245,200,0,.55)"></div>
+    <div style="width:12px;height:12px;border-radius:3px;background:var(--accent)"></div>
+    <span>Más</span>
+    <span style="margin-left:auto;color:var(--text2)">Total mes: <b style="color:var(--accent)">${fmtMoney(totalMes)}</b></span>
+  </div></div>`;
+  cont.innerHTML=html;
+}
+function cambiarMesCal(d){
+  calFecha=new Date(calFecha.getFullYear(),calFecha.getMonth()+d,1);
+  renderCalendario();
+}
+function irAFecha(f){
+  // Find the "Por fecha" tab button and activate it
+  const tabs=document.querySelectorAll('#page-guardias .tab');
+  let fechaTab=null;
+  tabs.forEach(t=>{ if(t.textContent.includes('fecha')||t.getAttribute('onclick')||''.includes("'fecha'")) fechaTab=t; });
+  // More reliable: find by onclick attribute
+  tabs.forEach(t=>{ if((t.getAttribute('onclick')||'').includes("'fecha'")) fechaTab=t; });
+  document.getElementById('guardia-fecha-nav').style.display='flex';
+  document.getElementById('guardia-fecha-sel').value=f;
+  if(fechaTab) setGuardiaTab('fecha',fechaTab);
+  else{ guardiaTab='fecha'; renderGuardias('fecha'); }
+}
+
+// =====================
 // UI HELPERS
 // =====================
 function updateBadges(){
-  // Pendientes: un pass rápido
   let pend=0;
   for(const g of DB.guardias){ if(g.estado==='no_pago'||g.estado==='incompleto') pend++; }
   const alrt = getAlertas().length;
@@ -3351,6 +3812,11 @@ function updateBadges(){
   const ba=document.getElementById('badge-alertas');
   if(bp) bp.textContent=pend||'';
   if(ba) ba.textContent=alrt||'';
+  // Bottom nav badge
+  const bnBadge=document.getElementById('bn-badge-pend');
+  if(bnBadge){ bnBadge.textContent=pend||''; bnBadge.style.display=pend?'flex':'none'; }
+  const masBadge=document.getElementById('mas-badge-alertas');
+  if(masBadge) masBadge.textContent=alrt||'';
 }
 
 function showToast(msg){
@@ -3461,10 +3927,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const action = btn.dataset.action;
     const id     = btn.dataset.id;
     if     (action === 'editar-moto')             editarMoto(id);
+    else if(action === 'historial-moto')          abrirHistorialMoto(id);
     else if(action === 'eliminar-moto')           eliminarMoto(id);
     else if(action === 'editar-conductor')        editarConductor(id);
     else if(action === 'eliminar-conductor')      eliminarConductor(id);
     else if(action === 'abonar-guardia')          abrirAbono(id);
+    else if(action === 'editar-guardia')          editarGuardia(id);
     else if(action === 'pago-rapido')             abrirPagoRapido(id);
     else if(action === 'eliminar-guardia')        eliminarGuardia(id);
     else if(action === 'config-tienda')           abrirConfigTienda(id);
